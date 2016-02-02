@@ -27,6 +27,7 @@
 #include "gpopt/operators/CExpressionHandle.h"
 #include "gpopt/operators/CPredicateUtils.h"
 #include "gpopt/operators/CPhysicalDML.h"
+#include "gpopt/optimizer/COptimizerConfig.h"
 
 using namespace gpopt;
 
@@ -522,7 +523,15 @@ CPhysicalDML::PosComputeRequired
 	const
 {
 	COrderSpec *pos = GPOS_NEW(pmp) COrderSpec(pmp);
+	COptimizerConfig *poconf = COptCtxt::PoctxtFromTLS()->Poconf();
 	
+	BOOL fInsertSortOnParquet = !GPOS_FTRACE(EopttraceDisableSortForDMLOnParquet) &&
+			IMDRelation::ErelstorageAppendOnlyParquet == m_ptabdesc->Erelstorage();
+
+	BOOL fInsertSortOnRows = !GPOS_FTRACE(EopttraceDisableSortForDMLOnRowOriented) &&
+			IMDRelation::ErelstorageAppendOnlyRows == m_ptabdesc->Erelstorage() &&
+			poconf->Phint()->UlInsertSortPartitionNumber() <= m_ptabdesc->PdrgpulPart()->UlLength();
+
 	const DrgPbs *pdrgpbsKeys = ptabdesc->PdrgpbsKeys();
 	if (1 < pdrgpbsKeys->UlLength() && CLogicalDML::EdmlUpdate == m_edmlop)
 	{
@@ -547,13 +556,13 @@ CPhysicalDML::PosComputeRequired
 			pos->Append(pmdid, m_pcrAction, COrderSpec::EntAuto);
 		}
 	}
-	else if (!GPOS_FTRACE(EopttraceDisableSortForDMLOnParquet) && 
-			IMDRelation::ErelstorageAppendOnlyParquet == m_ptabdesc->Erelstorage() &&
+	else if ((fInsertSortOnParquet || fInsertSortOnRows) &&
 			m_ptabdesc->FPartitioned())
 	{
 		GPOS_ASSERT(CLogicalDML::EdmlInsert == m_edmlop);
 		
-		// if this is an INSERT over a partitioned Parquet table, sort tuples by their table oid
+		// if this is an INSERT over a partitioned Parquet or Row-oriented table,
+		// sort tuples by their table oid
 		IMDId *pmdid = m_pcrTableOid->Pmdtype()->PmdidCmp(IMDType::EcmptL);
 		pmdid->AddRef();
 		pos->Append(pmdid, m_pcrTableOid, COrderSpec::EntAuto);

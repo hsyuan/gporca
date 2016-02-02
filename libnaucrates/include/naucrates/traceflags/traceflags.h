@@ -164,6 +164,9 @@ namespace gpos
 		// prune unused computed columns
 		EopttraceDisablePruneUnusedComputedColumns = 103024,
 
+		// Disable sort below Insert for Row-Oriented tables
+		EopttraceDisableSortForDMLOnRowOriented = 103025,
+
 		///////////////////////////////////////////////////////
 		///////////////////// statistics flags ////////////////
 		//////////////////////////////////////////////////////

@@ -62,6 +62,8 @@ namespace gpdxl
 		EdxltokenCostModelConfig,
 		EdxltokenCostModelType,
 		EdxltokenSegmentsForCosting,
+		EdxltokenHint,
+		EdxltokenInsertSortPartitionNumber,
 
 		EdxltokenPlanSamples,
 

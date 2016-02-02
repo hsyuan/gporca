@@ -85,6 +85,8 @@ CDXLTokens::Init
 			{EdxltokenCostModelConfig, GPOS_WSZ_LIT("CostModelConfig")},
 			{EdxltokenCostModelType, GPOS_WSZ_LIT("CostModelType")},
 			{EdxltokenSegmentsForCosting, GPOS_WSZ_LIT("SegmentsForCosting")},
+			{EdxltokenHint, GPOS_WSZ_LIT("Hint")},
+			{EdxltokenInsertSortPartitionNumber, GPOS_WSZ_LIT("InsertSortPartitionNumber")},
 
 			{EdxltokenPlanSamples, GPOS_WSZ_LIT("PlanSamples")},
 			
