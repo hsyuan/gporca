@@ -57,6 +57,7 @@ CParseHandlerMDRelation::CParseHandlerMDRelation
 	m_pdrgpulDistrColumns(NULL),
 	m_fConvertHashToRandom(false),
 	m_pdrgpulPartColumns(NULL),
+	m_ulPartitions(0),
 	m_pdrgpdrgpulKeys(NULL),
 	m_ppartcnstr(NULL),
 	m_pdrgpulDefaultParts(NULL)
@@ -151,6 +152,19 @@ CParseHandlerMDRelation::StartElement
 														);
 	}
 
+	const XMLCh *xmlszPartitions = attrs.getValue(CDXLTokens::XmlstrToken(EdxltokenPartitions));
+
+	if (NULL != xmlszPartitions)
+	{
+		m_ulPartitions = CDXLOperatorFactory::UlValueFromXmlstr
+														(
+														m_pphm->Pmm(),
+														xmlszPartitions,
+														EdxltokenPartitions,
+														EdxltokenRelation
+														);
+	}
+
 	// parse whether a hash distributed relation needs to be considered as random distributed
 	const XMLCh *xmlszConvertHashToRandom = attrs.getValue(CDXLTokens::XmlstrToken(EdxltokenConvertHashToRandom));
 	if (NULL != xmlszConvertHashToRandom)
@@ -231,6 +245,7 @@ CParseHandlerMDRelation::EndElement
 									pdrgpmdcol,
 									m_pdrgpulDistrColumns,
 									m_pdrgpulPartColumns,
+									m_ulPartitions,
 									m_fConvertHashToRandom,
 									m_pdrgpdrgpulKeys,
 									pdrgpmdidIndices,

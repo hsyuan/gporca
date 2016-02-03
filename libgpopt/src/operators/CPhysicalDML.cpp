@@ -527,10 +527,12 @@ CPhysicalDML::PosComputeRequired
 	
 	BOOL fInsertSortOnParquet = !GPOS_FTRACE(EopttraceDisableSortForDMLOnParquet) &&
 			IMDRelation::ErelstorageAppendOnlyParquet == m_ptabdesc->Erelstorage();
+	ULONG numParts = m_ptabdesc->PdrgpulPart()->UlLength();
+	ULONG hintNum = poconf->Phint()->UlInsertSortPartitionNumber();
 
 	BOOL fInsertSortOnRows = !GPOS_FTRACE(EopttraceDisableSortForDMLOnRowOriented) &&
 			IMDRelation::ErelstorageAppendOnlyRows == m_ptabdesc->Erelstorage() &&
-			poconf->Phint()->UlInsertSortPartitionNumber() <= m_ptabdesc->PdrgpulPart()->UlLength();
+			hintNum <= numParts;
 
 	const DrgPbs *pdrgpbsKeys = ptabdesc->PdrgpbsKeys();
 	if (1 < pdrgpbsKeys->UlLength() && CLogicalDML::EdmlUpdate == m_edmlop)

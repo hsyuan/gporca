@@ -84,6 +84,9 @@ namespace gpmd
 			// do we need to consider a hash distributed table as random distributed
 			BOOL m_fConvertHashToRandom;
 			
+			// number of partition
+			ULONG m_ulPartitions;
+
 			// indices of partition columns
 			DrgPul *m_pdrgpulPartColumns;
 			
@@ -135,6 +138,7 @@ namespace gpmd
 				DrgPmdcol *pdrgpmdcol,
 				DrgPul *pdrgpulDistrColumns,
 				DrgPul *pdrgpulPartColumns,
+				ULONG ulPartitions,
 				BOOL fConvertHashToRandom,
 				DrgPdrgPul *pdrgpdrgpul,
 				DrgPmdid *pdrgpmdidIndices,
@@ -239,6 +243,10 @@ namespace gpmd
 			virtual
 			ULONG UlPartColumns() const;
 			
+			// number of partitions
+			virtual
+			ULONG UlPartitions() const;
+
 			// retrieve the partition key column at the given position
 			virtual 
 			const IMDColumn *PmdcolPartColumn(ULONG ulPos) const;

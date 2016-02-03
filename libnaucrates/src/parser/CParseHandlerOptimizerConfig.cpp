@@ -192,10 +192,10 @@ CParseHandlerOptimizerConfig::EndElement
 	{
 		CParseHandlerCostModel *pphCostModelConfig = dynamic_cast<CParseHandlerCostModel *>((*this)[3]);
 		pcm = pphCostModelConfig->Pcm();
-		
 		GPOS_ASSERT(NULL != pcm);
-		
 		pcm->AddRef();
+
+		phint = CHint::PhintDefault(m_pmp);
 	}
 	else if (6 == this->UlLength())
 	{
@@ -213,6 +213,7 @@ CParseHandlerOptimizerConfig::EndElement
 	{
 		// no cost model: use default one
 		pcm = ICostModel::PcmDefault(m_pmp);
+		phint = CHint::PhintDefault(m_pmp);
 	}
 
 	m_poconf = GPOS_NEW(m_pmp) COptimizerConfig(pec, pstatsconf, pcteconfig, pcm, phint);

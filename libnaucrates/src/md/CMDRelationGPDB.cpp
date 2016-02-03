@@ -45,6 +45,7 @@ CMDRelationGPDB::CMDRelationGPDB
 	DrgPmdcol *pdrgpmdcol,
 	DrgPul *pdrgpulDistrColumns,
 	DrgPul *pdrgpulPartColumns,
+	ULONG ulPartitions,
 	BOOL fConvertHashToRandom,
 	DrgPdrgPul *pdrgpdrgpulKeys,
 	DrgPmdid *pdrgpmdidIndices,
@@ -65,6 +66,7 @@ CMDRelationGPDB::CMDRelationGPDB
 	m_pdrgpulDistrColumns(pdrgpulDistrColumns),
 	m_fConvertHashToRandom(fConvertHashToRandom),
 	m_pdrgpulPartColumns(pdrgpulPartColumns),
+	m_ulPartitions(ulPartitions),
 	m_pdrgpdrgpulKeys(pdrgpdrgpulKeys),
 	m_pdrgpmdidIndices(pdrgpmdidIndices),
 	m_pdrgpmdidTriggers(pdrgpmdidTriggers),
@@ -415,6 +417,20 @@ BOOL
 CMDRelationGPDB::FPartitioned() const
 {	
 	return (0 < UlPartColumns());
+}
+
+//---------------------------------------------------------------------------
+//	@function:
+//		CMDRelationGPDB::UlPartitions
+//
+//	@doc:
+//		number of partitions
+//
+//---------------------------------------------------------------------------
+ULONG
+CMDRelationGPDB::UlPartitions() const
+{
+	return m_ulPartitions;
 }
 
 //---------------------------------------------------------------------------
