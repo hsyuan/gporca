@@ -86,6 +86,9 @@ namespace gpopt
 			// key sets
 			DrgPbs *m_pdrgpbsKeys;
 			
+			// number of leaf partitions
+			ULONG m_ulPartitions;
+
 			// id of user the table needs to be accessed with
 			ULONG m_ulExecuteAsUser;
 
@@ -176,6 +179,8 @@ namespace gpopt
 			{
 				return m_pdrgpbsKeys;
 			}
+
+			const ULONG UlPartitions() const;
 
 			// distribution policy
 			IMDRelation::Ereldistrpolicy Ereldistribution() const 
