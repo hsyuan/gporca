@@ -180,7 +180,7 @@ namespace gpopt
 				return m_pdrgpbsKeys;
 			}
 
-			const ULONG UlPartitions() const;
+			ULONG UlPartitions() const;
 
 			// distribution policy
 			IMDRelation::Ereldistrpolicy Ereldistribution() const 
