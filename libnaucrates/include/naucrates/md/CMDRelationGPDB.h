@@ -83,13 +83,13 @@ namespace gpmd
 			
 			// do we need to consider a hash distributed table as random distributed
 			BOOL m_fConvertHashToRandom;
-			
-			// number of partition
-			ULONG m_ulPartitions;
 
 			// indices of partition columns
 			DrgPul *m_pdrgpulPartColumns;
 			
+			// number of partition
+			ULONG m_ulPartitions;
+
 			// array of key sets
 			DrgPdrgPul *m_pdrgpdrgpulKeys;
 

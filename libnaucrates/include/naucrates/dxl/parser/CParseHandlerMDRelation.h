@@ -71,11 +71,11 @@ namespace gpdxl
 			// do we need to consider a hash distributed table as random distributed
 			BOOL m_fConvertHashToRandom;
 			
-			// number of partitions
-			ULONG m_ulPartitions;
-
 			// partition keys
 			DrgPul *m_pdrgpulPartColumns;
+
+			// number of partitions
+			ULONG m_ulPartitions;
 			
 			// key sets
 			DrgPdrgPul *m_pdrgpdrgpulKeys;

@@ -152,7 +152,7 @@ CParseHandlerMDRelation::StartElement
 														);
 	}
 
-	const XMLCh *xmlszPartitions = attrs.getValue(CDXLTokens::XmlstrToken(EdxltokenPartitions));
+	const XMLCh *xmlszPartitions = attrs.getValue(CDXLTokens::XmlstrToken(EdxltokenNumLeafPartitions));
 
 	if (NULL != xmlszPartitions)
 	{
@@ -160,7 +160,7 @@ CParseHandlerMDRelation::StartElement
 														(
 														m_pphm->Pmm(),
 														xmlszPartitions,
-														EdxltokenPartitions,
+														EdxltokenNumLeafPartitions,
 														EdxltokenRelation
 														);
 	}

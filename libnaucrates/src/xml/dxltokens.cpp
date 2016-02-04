@@ -502,6 +502,7 @@ CDXLTokens::Init
 			{EdxltokenDistrColumns, GPOS_WSZ_LIT("DistributionColumns")},
 			
 			{EdxltokenPartKeys, GPOS_WSZ_LIT("PartitionColumns")},
+			{EdxltokenNumLeafPartitions, GPOS_WSZ_LIT("NumberLeafPartitions")},
 
 			{EdxltokenTypeInt4, GPOS_WSZ_LIT("Int4")},
 			{EdxltokenTypeBool, GPOS_WSZ_LIT("Bool")},

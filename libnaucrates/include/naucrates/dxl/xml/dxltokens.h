@@ -446,7 +446,7 @@ namespace gpdxl
 		EdxltokenRelStorageExternal,
 		
 		EdxltokenPartKeys,
-		EdxltokenPartitions,
+		EdxltokenNumLeafPartitions,
 		
 		EdxltokenRelDistrPolicy,
 		EdxltokenRelDistrMasterOnly,
