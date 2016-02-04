@@ -306,6 +306,12 @@ CParseHandlerMDRelation::ParseRelationAttributes
 		// construct an empty keyset
 		m_pdrgpdrgpulKeys = GPOS_NEW(m_pmp) DrgPdrgPul(m_pmp);
 	}
+
+	const XMLCh *xmlszNumLeafParts = CDXLOperatorFactory::XmlstrFromAttrs(attrs, EdxltokenNumLeafPartitions, edxltokenElement);
+	if (NULL != xmlszNumLeafParts)
+	{
+		m_ulPartitions = CDXLOperatorFactory::EreldistrpolicyFromXmlstr(xmlszNumLeafParts);
+	}
 }
 
 //---------------------------------------------------------------------------
