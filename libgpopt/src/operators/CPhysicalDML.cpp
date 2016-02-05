@@ -523,16 +523,6 @@ CPhysicalDML::PosComputeRequired
 	const
 {
 	COrderSpec *pos = GPOS_NEW(pmp) COrderSpec(pmp);
-	COptimizerConfig *poconf = COptCtxt::PoctxtFromTLS()->Poconf();
-	
-	BOOL fInsertSortOnParquet = !GPOS_FTRACE(EopttraceDisableSortForDMLOnParquet) &&
-			IMDRelation::ErelstorageAppendOnlyParquet == m_ptabdesc->Erelstorage();
-	ULONG numParts = m_ptabdesc->UlPartitions();
-	ULONG hintNum = poconf->Phint()->UlInsertSortPartitionNumber();
-
-	BOOL fInsertSortOnRows = !GPOS_FTRACE(EopttraceDisableSortForDMLOnRowOriented) &&
-			IMDRelation::ErelstorageAppendOnlyRows == m_ptabdesc->Erelstorage() &&
-			hintNum <= numParts;
 
 	const DrgPbs *pdrgpbsKeys = ptabdesc->PdrgpbsKeys();
 	if (1 < pdrgpbsKeys->UlLength() && CLogicalDML::EdmlUpdate == m_edmlop)
@@ -558,16 +548,27 @@ CPhysicalDML::PosComputeRequired
 			pos->Append(pmdid, m_pcrAction, COrderSpec::EntAuto);
 		}
 	}
-	else if ((fInsertSortOnParquet || fInsertSortOnRows) &&
-			m_ptabdesc->FPartitioned())
+	else if (m_ptabdesc->FPartitioned())
 	{
-		GPOS_ASSERT(CLogicalDML::EdmlInsert == m_edmlop);
+		COptimizerConfig *poconf = COptCtxt::PoctxtFromTLS()->Poconf();
+
+		BOOL fInsertSortOnParquet = !GPOS_FTRACE(EopttraceDisableSortForDMLOnParquet) &&
+				IMDRelation::ErelstorageAppendOnlyParquet == m_ptabdesc->Erelstorage();
+
+		BOOL fInsertSortOnRows = !GPOS_FTRACE(EopttraceDisableSortForDMLOnRowOriented) &&
+				IMDRelation::ErelstorageAppendOnlyRows == m_ptabdesc->Erelstorage() &&
+				poconf->Phint()->UlInsertSortPartitionNumber() <= m_ptabdesc->UlPartitions();
 		
-		// if this is an INSERT over a partitioned Parquet or Row-oriented table,
-		// sort tuples by their table oid
-		IMDId *pmdid = m_pcrTableOid->Pmdtype()->PmdidCmp(IMDType::EcmptL);
-		pmdid->AddRef();
-		pos->Append(pmdid, m_pcrTableOid, COrderSpec::EntAuto);
+		if (fInsertSortOnParquet || fInsertSortOnRows)
+		{
+			GPOS_ASSERT(CLogicalDML::EdmlInsert == m_edmlop);
+
+			// if this is an INSERT over a partitioned Parquet or Row-oriented table,
+			// sort tuples by their table oid
+			IMDId *pmdid = m_pcrTableOid->Pmdtype()->PmdidCmp(IMDType::EcmptL);
+			pmdid->AddRef();
+			pos->Append(pmdid, m_pcrTableOid, COrderSpec::EntAuto);
+		}
 	}
 	
 	return pos;
