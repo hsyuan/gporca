@@ -307,11 +307,8 @@ CParseHandlerMDRelation::ParseRelationAttributes
 		m_pdrgpdrgpulKeys = GPOS_NEW(m_pmp) DrgPdrgPul(m_pmp);
 	}
 
-	const XMLCh *xmlszNumLeafParts = CDXLOperatorFactory::XmlstrFromAttrs(attrs, EdxltokenNumLeafPartitions, edxltokenElement);
-	if (NULL != xmlszNumLeafParts)
-	{
-		m_ulPartitions = CDXLOperatorFactory::EreldistrpolicyFromXmlstr(xmlszNumLeafParts);
-	}
+	m_ulPartitions = CDXLOperatorFactory::UlValueFromAttrs(m_pphm->Pmm(), attrs, EdxltokenNumLeafPartitions, edxltokenElement,
+															true /* optional */, 0 /* default value */);
 }
 
 //---------------------------------------------------------------------------
