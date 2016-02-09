@@ -553,11 +553,11 @@ CPhysicalDML::PosComputeRequired
 		COptimizerConfig *poconf = COptCtxt::PoctxtFromTLS()->Poconf();
 
 		BOOL fInsertSortOnParquet = !GPOS_FTRACE(EopttraceDisableSortForDMLOnParquet) &&
-				IMDRelation::ErelstorageAppendOnlyParquet == m_ptabdesc->Erelstorage();
+				(IMDRelation::ErelstorageAppendOnlyParquet == m_ptabdesc->Erelstorage());
 
 		BOOL fInsertSortOnRows = !GPOS_FTRACE(EopttraceDisableSortForDMLOnRowOriented) &&
-				IMDRelation::ErelstorageAppendOnlyRows == m_ptabdesc->Erelstorage() &&
-				poconf->Phint()->UlInsertSortPartitionNumber() <= m_ptabdesc->UlPartitions();
+				(IMDRelation::ErelstorageAppendOnlyRows == m_ptabdesc->Erelstorage()) &&
+				(poconf->Phint()->UlInsertSortPartitionNumber() <= m_ptabdesc->UlPartitions());
 		
 		if (fInsertSortOnParquet || fInsertSortOnRows)
 		{
