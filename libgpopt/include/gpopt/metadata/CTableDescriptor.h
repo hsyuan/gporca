@@ -180,6 +180,7 @@ namespace gpopt
 				return m_pdrgpbsKeys;
 			}
 
+			// return the number of leaf partitions
 			ULONG UlPartitions() const;
 
 			// distribution policy

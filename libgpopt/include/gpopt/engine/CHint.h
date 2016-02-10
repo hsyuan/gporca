@@ -64,7 +64,8 @@ namespace gpopt
 				return m_ulMinNumOfPartsToRequireSortOnInsert;
 			}
 
-			// generate default optimizer configurations
+			// generate default hint configurations, which disables sort during insert on
+			// append only row-oriented partitioned tables by default
 			static
 			CHint *PhintDefault(IMemoryPool *pmp)
 			{
