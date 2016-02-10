@@ -59,7 +59,6 @@ const CHAR *rgszDMLFileNames[] =
 	"../data/dxl/minidump/Insert-AO.mdp",
 	"../data/dxl/minidump/Insert-AO-Partitioned.mdp",
 	"../data/dxl/minidump/Insert-AO-Partitioned-NoSort.mdp",
-	"../data/dxl/minidump/Insert-AO-Partitioned-SortDisabled.mdp",
 	"../data/dxl/minidump/DML-Replicated-Input.mdp",
 	"../data/dxl/minidump/InsertWithTriggers.mdp",
 	"../data/dxl/minidump/DeleteWithTriggers.mdp",

@@ -41,7 +41,7 @@ namespace gpopt
 
 			// Minimum number of partitions required for sorting tuples during
 			// insertion in an append only row-oriented partitioned table
-			ULONG m_ulInsertSortPartitionNumber;
+			ULONG m_ulMinNumOfPartsToRequireSortOnInsert;
 
 			// private copy ctor
 			CHint(const CHint &);
@@ -51,24 +51,24 @@ namespace gpopt
 			// ctor
 			CHint
 				(
-				ULONG ulInsertSortPartitionNumber
+				ULONG ulMinNumOfPartsToRequireSortOnInsert
 				)
 				:
-				m_ulInsertSortPartitionNumber(ulInsertSortPartitionNumber)
+				m_ulMinNumOfPartsToRequireSortOnInsert(ulMinNumOfPartsToRequireSortOnInsert)
 			{}
 
 			// Minimum number of partitions required for sorting tuples during
 			// insertion in an append only row-oriented partitioned table
-			ULONG UlInsertSortPartitionNumber() const
+			ULONG UlMinNumOfPartsToRequireSortOnInsert() const
 			{
-				return m_ulInsertSortPartitionNumber;
+				return m_ulMinNumOfPartsToRequireSortOnInsert;
 			}
 
 			// generate default optimizer configurations
 			static
 			CHint *PhintDefault(IMemoryPool *pmp)
 			{
-				return GPOS_NEW(pmp) CHint(0 /* ulInsertSortPartitionNumber */);
+				return GPOS_NEW(pmp) CHint(ULONG_MAX /* ulMinNumOfPartsToRequireSortOnInsert */);
 			}
 
 	}; // class CHint

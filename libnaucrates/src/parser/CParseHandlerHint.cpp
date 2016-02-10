@@ -89,9 +89,9 @@ CParseHandlerHint::StartElement
 	}
 
 	// parse hint configuration options
-	ULONG ulInsertSortPartitionNumber = CDXLOperatorFactory::UlValueFromAttrs(m_pphm->Pmm(), attrs, EdxltokenInsertSortPartitionNumber, EdxltokenHint);
+	ULONG ulMinNumOfPartsToRequireSortOnInsert = CDXLOperatorFactory::UlValueFromAttrs(m_pphm->Pmm(), attrs, EdxltokenMinNumOfPartsToRequireSortOnInsert, EdxltokenHint);
 
-	m_phint = GPOS_NEW(m_pmp) CHint(ulInsertSortPartitionNumber);
+	m_phint = GPOS_NEW(m_pmp) CHint(ulMinNumOfPartsToRequireSortOnInsert);
 }
 
 //---------------------------------------------------------------------------

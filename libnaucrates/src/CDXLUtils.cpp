@@ -1240,7 +1240,7 @@ CDXLUtils::PstrSerializeOptimizerConfig
 	xmlser.CloseElement(CDXLTokens::PstrToken(EdxltokenNamespacePrefix), CDXLTokens::PstrToken(EdxltokenCostModelConfig));
 
 	xmlser.OpenElement(CDXLTokens::PstrToken(EdxltokenNamespacePrefix), CDXLTokens::PstrToken(EdxltokenHint));
-	xmlser.AddAttribute(CDXLTokens::PstrToken(EdxltokenInsertSortPartitionNumber), phint->UlInsertSortPartitionNumber());
+	xmlser.AddAttribute(CDXLTokens::PstrToken(EdxltokenMinNumOfPartsToRequireSortOnInsert), phint->UlMinNumOfPartsToRequireSortOnInsert());
 	xmlser.CloseElement(CDXLTokens::PstrToken(EdxltokenNamespacePrefix), CDXLTokens::PstrToken(EdxltokenHint));
 
 	return pstr;
