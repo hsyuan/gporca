@@ -80,6 +80,9 @@ namespace gpdxl
 			// direct dispatch info for insert statements 
 			CDXLDirectDispatchInfo *m_pdxlddinfo;
 			
+			// needs the data to be sorted or not
+			BOOL m_fNeedsSort;
+
 			// private copy ctor
 			CDXLPhysicalDML(const CDXLPhysicalDML &);
 			
@@ -98,7 +101,8 @@ namespace gpdxl
 				ULONG ulSegmentId,
 				BOOL fPreserveOids,
 				ULONG ulTupleOid,
-				CDXLDirectDispatchInfo *pdxlddinfo
+				CDXLDirectDispatchInfo *pdxlddinfo,
+				BOOL fNeedsSort
 				);
 
 			// dtor
@@ -171,6 +175,12 @@ namespace gpdxl
 				return m_pdxlddinfo;
 			}
 			
+			// needs the data to be sorted or not
+			BOOL FNeedsSort() const
+			{
+				return m_fNeedsSort;
+			}
+
 #ifdef GPOS_DEBUG
 			// checks whether the operator has valid structure, i.e. number and
 			// types of child nodes
