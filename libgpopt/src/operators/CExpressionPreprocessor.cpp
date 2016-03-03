@@ -1670,6 +1670,21 @@ CExpressionPreprocessor::PexprPruneUnusedComputedCols
 		CExpression *pexprProjList = (*pexpr)[1];
 		CColRefSet *pcrsUnusedLocal = GPOS_NEW(pmp) CColRefSet(pmp);
 		CColRefSet *pcrsDefined = CDrvdPropScalar::Pdpscalar(pexprProjList->PdpDerive())->PcrsDefined();
+
+		if (COperator::EopLogicalProject == pop->Eopid())
+		{
+			const ULONG ulChildren = pexprProjList->UlArity();
+			for (ULONG ul = 0; ul < ulChildren; ul++)
+			{
+				CExpression *pexprChild = (*pexprProjList)[ul];
+				CDrvdPropScalar *pdps = CDrvdPropScalar::Pdpscalar(pexprChild->PdpDerive());
+				if (pdps->FHasNonScalarFunction())
+				{
+					pcrsReqdNew->Include(pdps->PcrsDefined());
+				}
+			}
+		}
+
 		pcrsUnusedLocal->Include(pcrsDefined);
 		pcrsUnusedLocal->Difference(pcrsReqdNew);
 
@@ -1791,17 +1806,18 @@ CExpressionPreprocessor::PexprPruneProjListProjectOrGbAgg
 		// only remove part of the project elements
 		DrgPexpr *pdrgpexprPrElRemain = GPOS_NEW(pmp) DrgPexpr(pmp);
 		const ULONG ulPrjEls = pexprProjList->UlArity();
-		CExpressionHandle exprhdl(pmp);
 
 		for (ULONG ul = 0; ul < ulPrjEls; ul++)
 		{
 			CExpression *pexprPrEl = (*pexprProjList)[ul];
 			CScalarProjectElement *popPrEl = CScalarProjectElement::PopConvert(pexprPrEl->Pop());
-			if (!pcrsUnused->FMember(popPrEl->Pcr()))
+
+			CDrvdPropScalar *pdpscalar = CDrvdPropScalar::Pdpscalar(pexprPrEl->PdpDerive());
+			if (!pcrsUnused->FMember(popPrEl->Pcr()) || pdpscalar->FHasSubquery())
 			{
 				pexprPrEl->AddRef();
 				pdrgpexprPrElRemain->Append(pexprPrEl);
-				pcrsReqdNew->Include(CDrvdPropScalar::Pdpscalar(pexprPrEl->PdpDerive())->PcrsUsed());
+				pcrsReqdNew->Include(pdpscalar->PcrsUsed());
 			}
 		}
 
