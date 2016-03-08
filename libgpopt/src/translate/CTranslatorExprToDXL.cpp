@@ -2131,7 +2131,20 @@ CTranslatorExprToDXL::PdxlnComputeScalar
 
 	// compute required columns
 	GPOS_ASSERT(NULL != pexprComputeScalar->Prpp());
+
 	CColRefSet *pcrsOutput = pexprComputeScalar->Prpp()->PcrsRequired();
+
+	ULONG ulPrLs = pexprProjList->UlArity();
+	for (ULONG ul = 0; ul < ulPrLs; ul++)
+	{
+		CExpression *pexprPrE = (*pexprProjList)[ul];
+		CDrvdPropScalar *pdpscalar = CDrvdPropScalar::Pdpscalar(pexprPrE->PdpDerive());
+		if (pdpscalar->FHasNonScalarFunction())
+		{
+			CScalarProjectElement *popScPrE = CScalarProjectElement::PopConvert(pexprPrE->Pop());
+			pcrsOutput->Include(popScPrE->Pcr());
+		}
+	}
 
 	// translate project list expression
 	CDXLNode *pdxlnPrL = NULL;
