@@ -155,7 +155,7 @@ select count(*) from (select generate_series(1, 10) i) t1, (select generate_seri
                 </dxl:JoinFilter>
                 <dxl:Result>
                     <dxl:Properties>
-                        <dxl:Cost StartupCost="0" TotalCost="0.000002" Rows="1.000000" Width="1"/>
+                        <dxl:Cost StartupCost="0" TotalCost="0.000002" Rows="1.000000" Width="4"/>
                     </dxl:Properties>
                     <dxl:ProjList>
                         <dxl:ProjElem ColId="3" Alias="j">
@@ -192,7 +192,7 @@ select count(*) from (select generate_series(1, 10) i) t1, (select generate_seri
                     <dxl:Filter/>
                     <dxl:Result>
                         <dxl:Properties>
-                            <dxl:Cost StartupCost="0" TotalCost="0.000002" Rows="1.000000" Width="1"/>
+                            <dxl:Cost StartupCost="0" TotalCost="0.000002" Rows="1.000000" Width="4"/>
                         </dxl:Properties>
                         <dxl:ProjList>
                             <dxl:ProjElem ColId="1" Alias="i">
