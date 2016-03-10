@@ -164,7 +164,7 @@ select count(*) from (select unnest(arr) i, 1 j from (select string_to_array('aa
       <dxl:Filter/>
       <dxl:Result>
         <dxl:Properties>
-          <dxl:Cost StartupCost="0" TotalCost="0.000010" Rows="1.000000" Width="1"/>
+          <dxl:Cost StartupCost="0" TotalCost="0.000010" Rows="1.000000" Width="8"/>
         </dxl:Properties>
         <dxl:ProjList>
           <dxl:ProjElem ColId="2" Alias="i">

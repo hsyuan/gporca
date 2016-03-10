@@ -151,7 +151,7 @@ select count(*) from ( select unnest(arr) i, unnest(arr) j  from (    select str
       <dxl:Filter/>
       <dxl:Result>
         <dxl:Properties>
-          <dxl:Cost StartupCost="0" TotalCost="0.000010" Rows="1.000000" Width="1"/>
+          <dxl:Cost StartupCost="0" TotalCost="0.000010" Rows="1.000000" Width="16"/>
         </dxl:Properties>
         <dxl:ProjList>
           <dxl:ProjElem ColId="2" Alias="i">
