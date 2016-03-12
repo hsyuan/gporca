@@ -115,6 +115,7 @@ namespace gpopt
 				return m_pcrsUsed;
 			}
 
+			// columns containing set-returning function
 			CColRefSet *PcrsSetReturningFunction() const
 			{
 				return m_pcrsSetReturningFunction;

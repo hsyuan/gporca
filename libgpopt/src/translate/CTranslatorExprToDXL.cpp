@@ -2131,14 +2131,19 @@ CTranslatorExprToDXL::PdxlnComputeScalar
 
 	// compute required columns
 	GPOS_ASSERT(NULL != pexprComputeScalar->Prpp());
-
 	CColRefSet *pcrsOutput = pexprComputeScalar->Prpp()->PcrsRequired();
 
-	ULONG ulPrLs = pexprProjList->UlArity();
+	// iterate the columns in the projection list, add the columns containing
+	// set-returning functions to the output columns
+	const ULONG ulPrLs = pexprProjList->UlArity();
 	for (ULONG ul = 0; ul < ulPrLs; ul++)
 	{
 		CExpression *pexprPrE = (*pexprProjList)[ul];
 		CDrvdPropScalar *pdpscalar = CDrvdPropScalar::Pdpscalar(pexprPrE->PdpDerive());
+
+		// for column that doesn't contain set-returning function, if it is not the
+		// required column in the relational plan properties, then no need to add them
+		// to the output columns
 		if (pdpscalar->FHasNonScalarFunction())
 		{
 			CScalarProjectElement *popScPrE = CScalarProjectElement::PopConvert(pexprPrE->Pop());

@@ -1671,6 +1671,7 @@ CExpressionPreprocessor::PexprPruneUnusedComputedCols
 		CColRefSet *pcrsSetReturningFunction = CDrvdPropScalar::Pdpscalar(pexprProjList->PdpDerive())->PcrsSetReturningFunction();
 
 		pcrsReqdNew->Include(CLogical::PopConvert(pop)->PcrsLocalUsed());
+		// columns containing set-returning functions are needed for correct query results
 		pcrsReqdNew->Union(pcrsSetReturningFunction);
 
 		CColRefSet *pcrsUnusedLocal = GPOS_NEW(pmp) CColRefSet(pmp);

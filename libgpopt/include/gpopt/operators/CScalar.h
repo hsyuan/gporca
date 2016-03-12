@@ -130,6 +130,7 @@ namespace gpopt
 				return GPOS_NEW(pmp) CColRefSet(pmp);
 			}
 
+			// return columns containing set-returning function
 			virtual
 			CColRefSet *PcrsSetReturningFunction
 				(
