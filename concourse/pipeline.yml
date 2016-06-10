@@ -659,6 +659,5 @@ jobs:
     - get: bin_xerces_centos6
       passed:
       - gp_xerces
-  - aggregate:
-    - task: test_with_orca
-      file: gpdb_src/concourse/test_with_orca.yml
+  - task: test_with_orca
+    file: gpdb_src/concourse/test_with_orca.yml
