@@ -872,8 +872,11 @@ CPhysical::PppsRequiredPushThruNAry
 		if (ppfmReqd->FContainsScanId(ulPartIndexId))
 		{
 			CExpression *pexpr = ppfmReqd->Pexpr(ulPartIndexId);
-			pexpr->AddRef();
-			ppfmResult->AddPartFilter(pmp, ulPartIndexId, pexpr, NULL /*pstats */);
+			if (1 != ulChildIndex && CUtils::FScalarNullTest(pexpr) && CUtils::FPhysicalOuterJoin(exprhdl.Pop()))
+			{
+				pexpr->AddRef();
+				ppfmResult->AddPartFilter(pmp, ulPartIndexId, pexpr, NULL /*pstats */);
+			}
 		}
 	}
 

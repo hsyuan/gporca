@@ -86,6 +86,7 @@ const CHAR *rgszPartTblFileNames[] =
 	"../data/dxl/minidump/PartTbl-SubqueryOuterRef.mdp",
 	"../data/dxl/minidump/PartTbl-CSQ-PartKey.mdp",
 	"../data/dxl/minidump/PartTbl-CSQ-NonPartKey.mdp",
+	"../data/dxl/minidump/PartTbl-LeftOuterJoin-DPE-IsNull.mdp",
 
 	};
 
