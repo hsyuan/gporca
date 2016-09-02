@@ -3449,10 +3449,17 @@ CTranslatorExprToDXL::PdxlnResultFromNLJoinOuter
 	// create a result node from the input expression
 	CDXLNode *pdxlnResult = PdxlnResult(pexprRelational, pdrgpcr, pdrgpdsBaseTables, pulNonGatherMotions, pfDML, pdxlprop);
 
-	// add the new filter to the result replacing its original
-	// empty filter
-	CDXLNode *pdxlnFilter = PdxlnFilter(pdxlnCond);
-	pdxlnResult->ReplaceChild(EdxltsIndexFilter /*ulPos*/, pdxlnFilter);
+	if(EdxlopPhysicalSequence != pdxlnResult->Pdxlop()->Edxlop())
+	{
+		// add the new filter to the result replacing its original
+		// empty filter
+		CDXLNode *pdxlnFilter = PdxlnFilter(pdxlnCond);
+		pdxlnResult->ReplaceChild(EdxltsIndexFilter /*ulPos*/, pdxlnFilter);
+	}
+	else
+	{
+		pdxlnCond->Release();
+	}
 
 	return pdxlnResult;
 }
