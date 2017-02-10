@@ -534,6 +534,17 @@ namespace gpdxl
 				SINT sDefaultValue = 0
 				);
 
+			// converts the XMLCh into char. Will raise an exception if the
+			// argument cannot be converted to char
+			static
+			CHAR CValueFromXmlstr
+				(
+				CDXLMemoryManager *pmm,
+				const XMLCh *xmlsz,
+				Edxltoken edxltokenAttr,
+				Edxltoken edxltokenElement
+				);
+
 			// converts the XMLCh into oid. Will raise an exception if the
 			// argument cannot be converted to OID
 			static
@@ -785,6 +796,24 @@ namespace gpdxl
 						(
 						pmm,
 						xmlszUl,
+						edxltokenAttr,
+						edxltokenElement
+						);
+			}
+
+			static
+			DrgPsz *PdrgpszFromXMLCh
+				(
+				CDXLMemoryManager *pmm,
+				const XMLCh *xmlsz,
+				Edxltoken edxltokenAttr,
+				Edxltoken edxltokenElement
+				)
+			{
+				return PdrgptFromXMLCh<CHAR, CleanupDelete, CValueFromXmlstr>
+						(
+						pmm,
+						xmlsz,
 						edxltokenAttr,
 						edxltokenElement
 						);

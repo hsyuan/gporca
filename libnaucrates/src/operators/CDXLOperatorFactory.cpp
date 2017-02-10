@@ -2306,6 +2306,28 @@ CDXLOperatorFactory::SValueFromAttrs
 
 //---------------------------------------------------------------------------
 //	@function:
+//		CDXLOperatorFactory::CValueFromXmlstr
+//
+//	@doc:
+//	  	Converts the attribute value from xml string to char
+//
+//---------------------------------------------------------------------------
+CHAR
+CDXLOperatorFactory::CValueFromXmlstr
+	(
+	CDXLMemoryManager *pmm,
+	const XMLCh *xmlszVal,
+	Edxltoken , // edxltokenAttr,
+	Edxltoken  // edxltokenElement
+	)
+{
+	GPOS_ASSERT(xmlszVal != NULL);
+	CHAR *pVal = XMLString::transcode(xmlszVal, pmm);
+	return *pVal;
+}
+
+//---------------------------------------------------------------------------
+//	@function:
 //		CDXLOperatorFactory::OidValueFromXmlstr
 //
 //	@doc:
