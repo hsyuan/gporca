@@ -4672,6 +4672,7 @@ CTranslatorExprToDXL::ConstructLevelFiltersPartitionSelectorRange
 {
 	GPOS_ASSERT(NULL != pexprPartSelector);
 	CPhysicalPartitionSelector *popSelector = CPhysicalPartitionSelector::PopConvert(pexprPartSelector->Pop());
+	const IMDRelation *pmdrel = (IMDRelation *) m_pmda->Pmdrel(popSelector->Pmdid());
 
 	const ULONG ulPartLevels = popSelector->UlPartLevels();
 	GPOS_ASSERT(1 <= ulPartLevels);
@@ -4700,19 +4701,35 @@ CTranslatorExprToDXL::ConstructLevelFiltersPartitionSelectorRange
 		{
 			CDXLNode *pdxlnEq = PdxlnScalar(pexprEqFilter);
 			IMDId *pmdidTypeOther = CScalar::PopConvert(pexprEqFilter->Pop())->PmdidType();
+			CHAR szPartType = pmdrel->szPartType(ulLevel);
 			fEQComparison = true;
 
-			pdxlnFilter = CTranslatorExprToDXLUtils::PdxlnRangeFilterEqCmp
-							(
-							m_pmp,
-							m_pmda,
-							pdxlnEq,
-							pmdidTypePartKey,
-							pmdidTypeOther,
-							NULL /*pmdidTypeCastExpr*/,
-							NULL /*pmdidCastFunc*/,
-							ulLevel
-							);
+			if (IMDRelation::ErelpartitionRange == szPartType)
+			{
+				pdxlnFilter = CTranslatorExprToDXLUtils::PdxlnRangeFilterEqCmp
+								(
+								m_pmp,
+								m_pmda,
+								pdxlnEq,
+								pmdidTypePartKey,
+								pmdidTypeOther,
+								NULL /*pmdidTypeCastExpr*/,
+								NULL /*pmdidCastFunc*/,
+								ulLevel
+								);
+			}
+			else if (IMDRelation::ErelpartitionList == szPartType)
+			{
+				pdxlnFilter = CTranslatorExprToDXLUtils::PdxlnListFilterEqCmp
+								(
+								m_pmp,
+								m_pmda,
+								pdxlnEq,
+								pmdidTypePartKey,
+								pmdidTypeOther,
+								ulLevel
+								);
+			}
 		}
 
 		// check general filters on current level

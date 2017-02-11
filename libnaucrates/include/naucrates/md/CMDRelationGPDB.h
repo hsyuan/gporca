@@ -240,10 +240,6 @@ namespace gpmd
 			virtual
 			ULONG UlPartColumns() const;
 			
-			// partition type of the given level
-			virtual
-			CHAR szPartType(ULONG ulLevel) const;
-
 			// number of partitions
 			virtual
 			ULONG UlPartitions() const;
@@ -251,6 +247,10 @@ namespace gpmd
 			// retrieve the partition key column at the given position
 			virtual 
 			const IMDColumn *PmdcolPartColumn(ULONG ulPos) const;
+
+			// retrieve the partition type of the given level
+			virtual
+			CHAR szPartType(ULONG ulLevel) const;
 
 			// number of indices
 			virtual 

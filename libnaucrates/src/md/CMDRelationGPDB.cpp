@@ -697,7 +697,10 @@ CMDRelationGPDB::Serialize
 		CWStringDynamic *pstrPartKeys = CDXLUtils::PstrSerialize(m_pmp, m_pdrgpulPartColumns);
 		pxmlser->AddAttribute(CDXLTokens::PstrToken(EdxltokenPartKeys), pstrPartKeys);
 		GPOS_DELETE(pstrPartKeys);
+	}
 
+	if (m_pdrgpszPartTypes)
+	{
 		// serialize partition types
 		CWStringDynamic *pstrPartTypes = CDXLUtils::PstrSerializeSz(m_pmp, m_pdrgpszPartTypes);
 		pxmlser->AddAttribute(CDXLTokens::PstrToken(EdxltokenPartTypes), pstrPartTypes);

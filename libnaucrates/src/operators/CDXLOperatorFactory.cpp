@@ -2322,8 +2322,10 @@ CDXLOperatorFactory::CValueFromXmlstr
 	)
 {
 	GPOS_ASSERT(xmlszVal != NULL);
-	CHAR *pVal = XMLString::transcode(xmlszVal, pmm);
-	return *pVal;
+	CHAR *sz = XMLString::transcode(xmlszVal, pmm);
+	CHAR val = *sz;
+	XMLString::release(&sz, pmm);
+	return val;
 }
 
 //---------------------------------------------------------------------------

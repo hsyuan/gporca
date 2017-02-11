@@ -726,6 +726,54 @@ CTranslatorExprToDXLUtils::PdxlnRangePointPredicate
 
 //---------------------------------------------------------------------------
 //	@function:
+//		CTranslatorExprToDXLUtils::PdxlnListFilterEqCmp
+//
+//	@doc:
+// 		Construct a predicate node for a filter min <= Scalar and max >= Scalar
+//
+//---------------------------------------------------------------------------
+CDXLNode *
+CTranslatorExprToDXLUtils::PdxlnListFilterEqCmp
+	(
+	IMemoryPool *pmp,
+	CMDAccessor *pmda,
+	CDXLNode *pdxlnScalar,
+	IMDId *pmdidTypePartKey,
+	IMDId *, //pmdidTypeOther,
+	ULONG ulPartLevel
+	)
+{
+	const IMDType *pmdtypePartKey = pmda->Pmdtype(pmdidTypePartKey);
+	IMDId *pmdidEq = pmdtypePartKey->PmdidCmp(IMDType::EcmptEq);
+	pmdidEq->AddRef();
+
+	const IMDScalarOp *pmdscop = pmda->Pmdscop(pmdidEq);
+	const CWStringConst *pstrScCmp = pmdscop->Mdname().Pstr();
+
+//	CDXLNode *pdxlnScId = GPOS_NEW(pmp) CDXLNode(pmp, GPOS_NEW(pmp) CDXLScalarIdent(pmp, pdxlcr, pmdtypePartKey));
+	CDXLNode *pdxlnPartList = GPOS_NEW(pmp) CDXLNode(pmp, GPOS_NEW(pmp) CDXLScalarPartDefault(pmp, ulPartLevel));
+
+	pdxlnScalar->AddRef();
+	CDXLNode *pdxlnArrayCmp = GPOS_NEW(pmp) CDXLNode
+												(
+												pmp,
+												GPOS_NEW(pmp) CDXLScalarArrayComp
+															(
+															pmp,
+															pmdidEq,
+															GPOS_NEW(pmp) CWStringConst(pmp, pstrScCmp->Wsz()), // pmdidEq->Wsz(),
+															Edxlarraycomptypeany
+															),
+												pdxlnScalar,
+												pdxlnPartList
+												);
+
+	CDXLNode *pdxlnDefault = GPOS_NEW(pmp) CDXLNode(pmp, GPOS_NEW(pmp) CDXLScalarPartDefault(pmp, ulPartLevel));
+	return GPOS_NEW(pmp) CDXLNode(pmp, GPOS_NEW(pmp) CDXLScalarBoolExpr(pmp, Edxlor), pdxlnArrayCmp, pdxlnDefault);
+}
+
+//---------------------------------------------------------------------------
+//	@function:
 //		CTranslatorExprToDXLUtils::PdxlnRangeFilterScCmp
 //
 //	@doc:
@@ -795,7 +843,7 @@ CTranslatorExprToDXLUtils::PdxlnRangeFilterScCmp
 	// return the final predicate in the form "(point <= col and colIncluded) or point < col" / "(point >= col and colIncluded) or point > col"
 	return GPOS_NEW(pmp) CDXLNode(pmp, GPOS_NEW(pmp) CDXLScalarBoolExpr(pmp, Edxlor), pdxlnPredicateInclusive, pdxlnPredicateExclusive);
 }
- 
+
 //---------------------------------------------------------------------------
 //	@function:
 //		CTranslatorExprToDXLUtils::PdxlnRangeFilterEqCmp

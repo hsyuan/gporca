@@ -271,6 +271,18 @@ namespace gpopt
 			static
 			CDXLNode *PdxlnInt4Const(IMemoryPool *pmp, CMDAccessor *pmda, INT iVal);
 
+			// construct a list filter for an equality comparison
+			static
+			CDXLNode *PdxlnListFilterEqCmp
+				(
+				IMemoryPool *pmp,
+				CMDAccessor *pmda,
+				CDXLNode *pdxlnScalar,
+				IMDId *pmdidTypePartKey,
+				IMDId *pmdidTypeOther,
+				ULONG ulPartLevel
+				);
+
 			// construct a filter node for a range predicate
 			static
 			CDXLNode *PdxlnRangeFilterScCmp
