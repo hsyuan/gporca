@@ -121,6 +121,7 @@ namespace gpdxl
 		EdxlopScalarPartBound,
 		EdxlopScalarPartBoundInclusion,
 		EdxlopScalarPartBoundOpen,
+		EdxlopScalarPartListValues,
 
 		EdxlopPhysicalResult,
 		EdxlopPhysicalProjection,

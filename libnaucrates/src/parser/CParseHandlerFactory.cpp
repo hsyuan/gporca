@@ -202,6 +202,7 @@ CParseHandlerFactory::Init
 			{EdxltokenScalarPartBound, &PphScalarPartBound},
 			{EdxltokenScalarPartBoundInclusion, &PphScalarPartBoundInclusion},
 			{EdxltokenScalarPartBoundOpen, &PphScalarPartBoundOpen},
+			{EdxltokenScalarPartListValues, &PphScalarPartListValues},
 
 			{EdxltokenScalarSubquery, &PphScalarSubquery},
 			{EdxltokenScalarBitmapAnd, &PphScalarBitmapBoolOp},
@@ -1575,6 +1576,25 @@ CParseHandlerFactory::PphScalarPartBoundOpen
 	)
 {
 	return GPOS_NEW(pmp) CParseHandlerScalarPartBoundOpen(pmp, pphm, pphRoot);
+}
+
+//---------------------------------------------------------------------------
+//	@function:
+//		CParseHandlerFactory::PphScalarPartListValues
+//
+//	@doc:
+//		Creates a parse handler for parsing a scalar part list values
+//
+//---------------------------------------------------------------------------
+CParseHandlerBase *
+CParseHandlerFactory::PphScalarPartListValues
+	(
+	IMemoryPool *pmp,
+	CParseHandlerManager *pphm,
+	CParseHandlerBase *pphRoot
+	)
+{
+	return GPOS_NEW(pmp) CParseHandlerScalarPartListValues(pmp, pphm, pphRoot);
 }
 
 //---------------------------------------------------------------------------

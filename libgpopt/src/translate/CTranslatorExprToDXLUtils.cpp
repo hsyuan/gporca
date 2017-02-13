@@ -751,7 +751,7 @@ CTranslatorExprToDXLUtils::PdxlnListFilterEqCmp
 	const CWStringConst *pstrScCmp = pmdscop->Mdname().Pstr();
 
 //	CDXLNode *pdxlnScId = GPOS_NEW(pmp) CDXLNode(pmp, GPOS_NEW(pmp) CDXLScalarIdent(pmp, pdxlcr, pmdtypePartKey));
-	CDXLNode *pdxlnPartList = GPOS_NEW(pmp) CDXLNode(pmp, GPOS_NEW(pmp) CDXLScalarPartDefault(pmp, ulPartLevel));
+	CDXLNode *pdxlnPartList = GPOS_NEW(pmp) CDXLNode(pmp, GPOS_NEW(pmp) CDXLScalarPartListValues(pmp, ulPartLevel));
 
 	pdxlnScalar->AddRef();
 	CDXLNode *pdxlnArrayCmp = GPOS_NEW(pmp) CDXLNode

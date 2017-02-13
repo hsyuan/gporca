@@ -211,6 +211,7 @@ namespace gpdxl
 		EdxltokenScalarPartBoundLower,
 		EdxltokenScalarPartBoundInclusion,
 		EdxltokenScalarPartBoundOpen,
+		EdxltokenScalarPartListValues,
 		EdxltokenScalarResidualFilter,
 		EdxltokenScalarPropagationExpr,
 		EdxltokenScalarPrintableFilter,
