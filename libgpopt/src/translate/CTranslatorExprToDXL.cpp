@@ -4687,6 +4687,9 @@ CTranslatorExprToDXL::ConstructLevelFiltersPartitionSelectorRange
 	{
 		CColRef *pcrPartKey = CUtils::PcrExtractPartKey(pdrgpdrgpcrPartKeys, ulLevel);
 		IMDId *pmdidTypePartKey = pcrPartKey->Pmdtype()->Pmdid();
+		CHAR szPartType = pmdrel->szPartType(ulLevel);
+		BOOL fRangePart = IMDRelation::ErelpartitionRange == szPartType;
+		BOOL fListPart = IMDRelation::ErelpartitionList == szPartType;
 
 		CDXLNode *pdxlnFilter = NULL;
 		BOOL fDefaultPartition = pbsDefaultParts->FBit(ulLevel);
@@ -4701,10 +4704,9 @@ CTranslatorExprToDXL::ConstructLevelFiltersPartitionSelectorRange
 		{
 			CDXLNode *pdxlnEq = PdxlnScalar(pexprEqFilter);
 			IMDId *pmdidTypeOther = CScalar::PopConvert(pexprEqFilter->Pop())->PmdidType();
-			CHAR szPartType = pmdrel->szPartType(ulLevel);
 			fEQComparison = true;
 
-			if (IMDRelation::ErelpartitionRange == szPartType)
+			if (fRangePart)
 			{
 				pdxlnFilter = CTranslatorExprToDXLUtils::PdxlnRangeFilterEqCmp
 								(
@@ -4718,15 +4720,19 @@ CTranslatorExprToDXL::ConstructLevelFiltersPartitionSelectorRange
 								ulLevel
 								);
 			}
-			else if (IMDRelation::ErelpartitionList == szPartType)
+			else if (fListPart)
 			{
-				pdxlnFilter = CTranslatorExprToDXLUtils::PdxlnListFilterEqCmp
+				// TODO: Add fDefaultPartition as argument
+				pdxlnFilter = CTranslatorExprToDXLUtils::PdxlnListFilterScCmp
 								(
 								m_pmp,
 								m_pmda,
 								pdxlnEq,
 								pmdidTypePartKey,
 								pmdidTypeOther,
+								NULL /*pmdidTypeCastExpr*/,
+								NULL /*pmdidCastFunc*/,
+								IMDType::EcmptEq,
 								ulLevel
 								);
 			}
@@ -4747,6 +4753,7 @@ CTranslatorExprToDXL::ConstructLevelFiltersPartitionSelectorRange
 										pcrPartKey,
 										pmdidTypePartKey,
 										ulLevel,
+										fRangePart,
 										&fLTComparison,
 										&fGTComparison,
 										&fEQComparison
@@ -4758,7 +4765,7 @@ CTranslatorExprToDXL::ConstructLevelFiltersPartitionSelectorRange
 			pdrgpexprConjuncts->Release();
 		}
 
-		if (NULL != pdxlnFilter)
+		if (NULL != pdxlnFilter && fRangePart)
 		{
 			CDXLNode *pdxlnDefaultAndOpenEnded = CTranslatorExprToDXLUtils::PdxlnRangeFilterDefaultAndOpenEnded
 										(
@@ -4801,6 +4808,7 @@ CTranslatorExprToDXL::PdxlnPredOnPartKey
 	CColRef *pcrPartKey,
 	IMDId *pmdidTypePartKey,
 	ULONG ulPartLevel,
+	BOOL fRangePart,
 	BOOL *pfLTComparison,	// input/output
 	BOOL *pfGTComparison,	// input/output
 	BOOL *pfEQComparison	// input/output
@@ -4808,7 +4816,7 @@ CTranslatorExprToDXL::PdxlnPredOnPartKey
 {
 	if (CPredicateUtils::FComparison(pexprPred))
 	{
-		return PdxlnScCmpPartKey(pexprPred, pcrPartKey, pmdidTypePartKey, ulPartLevel, pfLTComparison, pfGTComparison, pfEQComparison);
+		return PdxlnScCmpPartKey(pexprPred, pcrPartKey, pmdidTypePartKey, ulPartLevel, fRangePart, pfLTComparison, pfGTComparison, pfEQComparison);
 	}
 
 	if (CUtils::FScalarNullTest(pexprPred))
@@ -4818,7 +4826,7 @@ CTranslatorExprToDXL::PdxlnPredOnPartKey
 		GPOS_ASSERT(CUtils::FScalarIdent(pexprChild, pcrPartKey) || CUtils::FBinaryCoercibleCastedScId(pexprChild, pcrPartKey));
 #endif //GPOS_DEBUG
 
-		return PdxlnScNullTestPartKey(pmdidTypePartKey, ulPartLevel, true /*fIsNull*/);
+		return PdxlnScNullTestPartKey(pmdidTypePartKey, ulPartLevel, fRangePart, true /*fIsNull*/);
 	}
 
 	if (CUtils::FScalarNotNull(pexprPred))
@@ -4830,17 +4838,17 @@ CTranslatorExprToDXL::PdxlnPredOnPartKey
 #endif //GPOS_DEBUG
 
 		*pfEQComparison = true;
-		return PdxlnScNullTestPartKey(pmdidTypePartKey, ulPartLevel, false /*fIsNull*/);
+		return PdxlnScNullTestPartKey(pmdidTypePartKey, ulPartLevel, fRangePart, false /*fIsNull*/);
 	}
 
 	if (CPredicateUtils::FCompareIdentToConstArray(pexprPred))
 	{
-		return PdxlArrayExprOnPartKey(pexprPred, pcrPartKey, pmdidTypePartKey, ulPartLevel, pfLTComparison, pfGTComparison, pfEQComparison);
+		return PdxlArrayExprOnPartKey(pexprPred, pcrPartKey, pmdidTypePartKey, ulPartLevel, fRangePart, pfLTComparison, pfGTComparison, pfEQComparison);
 	}
 
 	GPOS_ASSERT(CPredicateUtils::FOr(pexprPred) || CPredicateUtils::FAnd(pexprPred));
 
-	return PdxlnConjDisjOnPartKey(pexprPred, pcrPartKey, pmdidTypePartKey, ulPartLevel, pfLTComparison, pfGTComparison, pfEQComparison);
+	return PdxlnConjDisjOnPartKey(pexprPred, pcrPartKey, pmdidTypePartKey, ulPartLevel, fRangePart, pfLTComparison, pfGTComparison, pfEQComparison);
 }
 
 //---------------------------------------------------------------------------
@@ -4865,6 +4873,7 @@ CTranslatorExprToDXL::PdxlArrayExprOnPartKey
 	CColRef *pcrPartKey,
 	IMDId *pmdidTypePartKey,
 	ULONG ulPartLevel,
+	BOOL fRangePart,
 	BOOL *pfLTComparison,	// input/output
 	BOOL *pfGTComparison,	// input/output
 	BOOL *pfEQComparison	// input/output
@@ -4880,7 +4889,7 @@ CTranslatorExprToDXL::PdxlArrayExprOnPartKey
 	// comparators which cannot be translated to a partition filter)
 	CExpression *pexprDisj = pci->PexprConstructDisjunctionScalar(m_pmp);
 
-	CDXLNode* pdxln = PdxlnConjDisjOnPartKey(pexprDisj, pcrPartKey, pmdidTypePartKey, ulPartLevel, pfLTComparison, pfGTComparison, pfEQComparison);
+	CDXLNode* pdxln = PdxlnConjDisjOnPartKey(pexprDisj, pcrPartKey, pmdidTypePartKey, ulPartLevel, fRangePart, pfLTComparison, pfGTComparison, pfEQComparison);
 	pexprDisj->Release();
 	pci->Release();
 
@@ -4904,6 +4913,7 @@ CTranslatorExprToDXL::PdxlnConjDisjOnPartKey
 	CColRef *pcrPartKey,
 	IMDId *pmdidTypePartKey,
 	ULONG ulPartLevel,
+	BOOL fRangePart,
 	BOOL *pfLTComparison,	// input/output
 	BOOL *pfGTComparison,	// input/output
 	BOOL *pfEQComparison	// input/output
@@ -4929,7 +4939,7 @@ CTranslatorExprToDXL::PdxlnConjDisjOnPartKey
 	for (ULONG ul = 0; ul < ulChildren; ul++)
 	{
 		CExpression *pexprChild = (*pdrgpexprChildren)[ul];
-		CDXLNode *pdxlnChild = PdxlnPredOnPartKey(pexprChild, pcrPartKey, pmdidTypePartKey, ulPartLevel, pfLTComparison, pfGTComparison, pfEQComparison);
+		CDXLNode *pdxlnChild = PdxlnPredOnPartKey(pexprChild, pcrPartKey, pmdidTypePartKey, ulPartLevel, fRangePart, pfLTComparison, pfGTComparison, pfEQComparison);
 
 		if (NULL == pdxlnPred)
 		{
@@ -4962,6 +4972,7 @@ CTranslatorExprToDXL::PdxlnScCmpPartKey
 	CColRef *pcrPartKey,
 	IMDId *pmdidTypePartKey,
 	ULONG ulPartLevel,
+	BOOL fRangePart,
 	BOOL *pfLTComparison,	// input/output
 	BOOL *pfGTComparison,	// input/output
 	BOOL *pfEQComparison	// input/output
@@ -4988,32 +4999,65 @@ CTranslatorExprToDXL::PdxlnScCmpPartKey
 	IMDId *pmdidTypeCastExpr = NULL;
 	IMDId *pmdidCastFunc = NULL;
 
-	CExpression *pexprNewPartKey = pexprPartKey;
-
-	// If the pexprPartKey is not comparable with pexprOther, but can be casted to pexprOther,
-	// and not yet casted, then we add a cast on top of pexprPartKey.
-	if (!CMDAccessorUtils::FCmpExists(m_pmda, pmdidTypePartKey, pmdidTypeOther, ecmpt)
-		&& CMDAccessorUtils::FCastExists(m_pmda, pmdidTypePartKey, pmdidTypeOther)
-		&& COperator::EopScalarCast != pexprPartKey->Pop()->Eopid())
+	if (fRangePart) // range partition
 	{
-		pexprNewPartKey = CUtils::PexprCast(m_pmp, m_pmda, pexprPartKey, pmdidTypeOther);
-		pexprPartKey->Release();
+		CExpression *pexprNewPartKey = pexprPartKey;
+
+		// If the pexprPartKey is not comparable with pexprOther, but can be casted to pexprOther,
+		// and not yet casted, then we add a cast on top of pexprPartKey.
+		if (!CMDAccessorUtils::FCmpExists(m_pmda, pmdidTypePartKey, pmdidTypeOther, ecmpt)
+			&& CMDAccessorUtils::FCastExists(m_pmda, pmdidTypePartKey, pmdidTypeOther)
+			&& COperator::EopScalarCast != pexprPartKey->Pop()->Eopid())
+		{
+			pexprNewPartKey = CUtils::PexprCast(m_pmp, m_pmda, pexprPartKey, pmdidTypeOther);
+			pexprPartKey->Release();
+		}
+
+		CTranslatorExprToDXLUtils::ExtractCastMdids(pexprNewPartKey->Pop(), &pmdidTypeCastExpr, &pmdidCastFunc);
+
+		return CTranslatorExprToDXLUtils::PdxlnRangeFilterScCmp
+								(
+								m_pmp,
+								m_pmda,
+								pdxlnOther,
+								pmdidTypePartKey,
+								pmdidTypeOther,
+								pmdidTypeCastExpr,
+								pmdidCastFunc,
+								ecmpt,
+								ulPartLevel
+								);
 	}
+	else // list partition
+	{
+		CExpression *pexprNewOther = pexprOther;
+		ecmpt = CPredicateUtils::EcmptReverse(ecmpt);
 
-	CTranslatorExprToDXLUtils::ExtractCastMdids(pexprNewPartKey->Pop(), &pmdidTypeCastExpr, &pmdidCastFunc);
+		// If the pexprPartKey is not comparable with pexprOther, but can be casted to pexprOther,
+		// and not yet casted, then we add a cast on top of pexprPartKey.
+		if (!CMDAccessorUtils::FCmpExists(m_pmda, pmdidTypeOther, pmdidTypePartKey, ecmpt)
+			&& CMDAccessorUtils::FCastExists(m_pmda, pmdidTypeOther, pmdidTypePartKey)
+			&& COperator::EopScalarCast != pexprOther->Pop()->Eopid())
+		{
+			pexprNewOther = CUtils::PexprCast(m_pmp, m_pmda, pexprOther, pmdidTypePartKey);
+			pexprOther->Release();
+		}
 
-	return CTranslatorExprToDXLUtils::PdxlnRangeFilterScCmp
-							(
-							m_pmp,
-							m_pmda,
-							pdxlnOther,
-							pmdidTypePartKey,
-							pmdidTypeOther,
-							pmdidTypeCastExpr,
-							pmdidCastFunc,
-							ecmpt,
-							ulPartLevel
-							);
+		CTranslatorExprToDXLUtils::ExtractCastMdids(pexprNewOther->Pop(), &pmdidTypeCastExpr, &pmdidCastFunc);
+
+		return CTranslatorExprToDXLUtils::PdxlnListFilterScCmp
+								(
+								m_pmp,
+								m_pmda,
+								pdxlnOther,
+								pmdidTypePartKey,
+								pmdidTypeOther,
+								pmdidTypeCastExpr,
+								pmdidCastFunc,
+								ecmpt,
+								ulPartLevel
+								);
+	}
 }
 
 //---------------------------------------------------------------------------
@@ -5029,6 +5073,7 @@ CTranslatorExprToDXL::PdxlnScNullTestPartKey
 	(
 	IMDId *pmdidTypePartKey,
 	ULONG ulPartLevel,
+	BOOL , //fRangePart,
 	BOOL fIsNull
 	)
 {

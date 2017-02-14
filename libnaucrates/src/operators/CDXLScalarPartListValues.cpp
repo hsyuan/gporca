@@ -31,12 +31,29 @@ using namespace gpdxl;
 CDXLScalarPartListValues::CDXLScalarPartListValues
 	(
 	IMemoryPool *pmp,
-	ULONG ulLevel
+	ULONG ulLevel,
+	IMDId *pmdidType
 	)
 	:
 	CDXLScalar(pmp),
-	m_ulLevel(ulLevel)
+	m_ulLevel(ulLevel),
+	m_pmdidType(pmdidType)
 {
+	GPOS_ASSERT(pmdidType->FValid());
+}
+
+
+//---------------------------------------------------------------------------
+//	@function:
+//		CDXLScalarPartListValues::~CDXLScalarPartListValues
+//
+//	@doc:
+//		Dtor
+//
+//---------------------------------------------------------------------------
+CDXLScalarPartListValues::~CDXLScalarPartListValues()
+{
+	m_pmdidType->Release();
 }
 
 //---------------------------------------------------------------------------
@@ -87,6 +104,7 @@ CDXLScalarPartListValues::SerializeToDXL
 
 	pxmlser->OpenElement(CDXLTokens::PstrToken(EdxltokenNamespacePrefix), pstrElemName);
 	pxmlser->AddAttribute(CDXLTokens::PstrToken(EdxltokenPartLevel), m_ulLevel);
+	m_pmdidType->Serialize(pxmlser, CDXLTokens::PstrToken(EdxltokenMDType));
 	pxmlser->CloseElement(CDXLTokens::PstrToken(EdxltokenNamespacePrefix), pstrElemName);
 }
 

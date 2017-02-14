@@ -454,6 +454,7 @@ namespace gpopt
 				CColRef *pcrPartKey,
 				IMDId *pmdidTypePartKey,
 				ULONG ulPartLevel,
+				BOOL fRangePart,
 				BOOL *pfLTComparison,
 				BOOL *pfGTComparison,
 				BOOL *pfEQComparison
@@ -467,6 +468,7 @@ namespace gpopt
 				CColRef *pcrPartKey,
 				IMDId *pmdidTypePartKey,
 				ULONG ulPartLevel,
+				BOOL fRangePart,
 				BOOL *pfLTComparison,
 				BOOL *pfGTComparison,
 				BOOL *pfEQComparison
@@ -480,6 +482,7 @@ namespace gpopt
 				CColRef *pcrPartKey,
 				IMDId *pmdidTypePartKey,
 				ULONG ulPartLevel,
+				BOOL fRangePart,
 				BOOL *pfLTComparison,
 				BOOL *pfGTComparison,
 				BOOL *pfEQComparison
@@ -490,6 +493,7 @@ namespace gpopt
 				(
 				IMDId *pmdidTypePartKey,
 				ULONG ulPartLevel,
+				BOOL fRangePart,
 				BOOL fIsNull
 				);
 
@@ -512,6 +516,7 @@ namespace gpopt
 				CColRef *pcrPartKey,
 				IMDId *pmdidTypePartKey,
 				ULONG ulPartLevel,
+				BOOL fRangePart,
 				BOOL *pfLTComparison,	// input/output
 				BOOL *pfGTComparison,	// input/output
 				BOOL *pfEQComparison	// input/output

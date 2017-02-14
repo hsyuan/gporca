@@ -726,42 +726,60 @@ CTranslatorExprToDXLUtils::PdxlnRangePointPredicate
 
 //---------------------------------------------------------------------------
 //	@function:
-//		CTranslatorExprToDXLUtils::PdxlnListFilterEqCmp
+//		CTranslatorExprToDXLUtils::PdxlnRangeFilterScCmp
 //
 //	@doc:
-// 		Construct a predicate node for a filter min <= Scalar and max >= Scalar
+// 		Construct a predicate node for a list partition filter
 //
 //---------------------------------------------------------------------------
 CDXLNode *
-CTranslatorExprToDXLUtils::PdxlnListFilterEqCmp
+CTranslatorExprToDXLUtils::PdxlnListFilterScCmp
 	(
 	IMemoryPool *pmp,
 	CMDAccessor *pmda,
 	CDXLNode *pdxlnScalar,
 	IMDId *pmdidTypePartKey,
-	IMDId *, //pmdidTypeOther,
+	IMDId *pmdidTypeOther,
+	IMDId *pmdidTypeCastExpr,
+	IMDId *pmdidCastFunc,
+	IMDType::ECmpType ecmpt,
 	ULONG ulPartLevel
 	)
 {
-	const IMDType *pmdtypePartKey = pmda->Pmdtype(pmdidTypePartKey);
-	IMDId *pmdidEq = pmdtypePartKey->PmdidCmp(IMDType::EcmptEq);
-	pmdidEq->AddRef();
+	IMDId *pmdidScCmp = NULL;
 
-	const IMDScalarOp *pmdscop = pmda->Pmdscop(pmdidEq);
+	if (IMDId::FValid(pmdidTypeCastExpr))
+	{
+		pmdidScCmp = CUtils::PmdidScCmp(pmp, pmda, pmdidTypeCastExpr, pmdidTypePartKey, ecmpt);
+	}
+	else
+	{
+		pmdidScCmp = CUtils::PmdidScCmp(pmp, pmda, pmdidTypeOther, pmdidTypePartKey, ecmpt);
+	}
+
+	const IMDScalarOp *pmdscop = pmda->Pmdscop(pmdidScCmp);
 	const CWStringConst *pstrScCmp = pmdscop->Mdname().Pstr();
 
-//	CDXLNode *pdxlnScId = GPOS_NEW(pmp) CDXLNode(pmp, GPOS_NEW(pmp) CDXLScalarIdent(pmp, pdxlcr, pmdtypePartKey));
-	CDXLNode *pdxlnPartList = GPOS_NEW(pmp) CDXLNode(pmp, GPOS_NEW(pmp) CDXLScalarPartListValues(pmp, ulPartLevel));
+	pmdidTypePartKey->AddRef();
+	CDXLNode *pdxlnPartList = GPOS_NEW(pmp) CDXLNode(pmp, GPOS_NEW(pmp) CDXLScalarPartListValues(pmp, ulPartLevel, pmdidTypePartKey));
 
-	pdxlnScalar->AddRef();
-	CDXLNode *pdxlnArrayCmp = GPOS_NEW(pmp) CDXLNode
+	if (IMDId::FValid(pmdidTypeCastExpr))
+	{
+		GPOS_ASSERT(NULL != pmdidCastFunc);
+		pmdidTypeCastExpr->AddRef();
+		pmdidCastFunc->AddRef();
+		pdxlnScalar = GPOS_NEW(pmp) CDXLNode(pmp, GPOS_NEW(pmp) CDXLScalarCast(pmp, pmdidTypeCastExpr, pmdidCastFunc), pdxlnScalar);
+	}
+
+	pmdidScCmp->AddRef();
+	CDXLNode *pdxlnScCmp = GPOS_NEW(pmp) CDXLNode
 												(
 												pmp,
 												GPOS_NEW(pmp) CDXLScalarArrayComp
 															(
 															pmp,
-															pmdidEq,
-															GPOS_NEW(pmp) CWStringConst(pmp, pstrScCmp->Wsz()), // pmdidEq->Wsz(),
+															pmdidScCmp,
+															GPOS_NEW(pmp) CWStringConst(pmp, pstrScCmp->Wsz()),
 															Edxlarraycomptypeany
 															),
 												pdxlnScalar,
@@ -769,7 +787,7 @@ CTranslatorExprToDXLUtils::PdxlnListFilterEqCmp
 												);
 
 	CDXLNode *pdxlnDefault = GPOS_NEW(pmp) CDXLNode(pmp, GPOS_NEW(pmp) CDXLScalarPartDefault(pmp, ulPartLevel));
-	return GPOS_NEW(pmp) CDXLNode(pmp, GPOS_NEW(pmp) CDXLScalarBoolExpr(pmp, Edxlor), pdxlnArrayCmp, pdxlnDefault);
+	return GPOS_NEW(pmp) CDXLNode(pmp, GPOS_NEW(pmp) CDXLScalarBoolExpr(pmp, Edxlor), pdxlnScCmp, pdxlnDefault);
 }
 
 //---------------------------------------------------------------------------
