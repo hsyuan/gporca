@@ -214,6 +214,11 @@ CConstraintInterval::PcnstrIntervalFromScalarArrayCmp
 
 
 	CExpression *pexprArray = (*pexpr)[1];
+	if (CUtils::FScalarArrayCoerce(pexprArray))
+	{
+		pexprArray = (*pexprArray)[0];
+	}
+
 	const ULONG ulArrayExprArity = pexprArray->UlArity();
 	if (0 == ulArrayExprArity)
 	{
@@ -623,7 +628,7 @@ CConstraintInterval::PexprConstructScalar
 	}
 
 	// otherwise, we generate a disjunction of ranges
-	return PexprConstructDisjunctionScalar(pmp);
+	return PexprConstructDisjunctionScalar(pmp, NULL);
 }
 
 //---------------------------------------------------------------------------
@@ -646,7 +651,8 @@ CConstraintInterval::PexprConstructScalar
 CExpression *
 CConstraintInterval::PexprConstructDisjunctionScalar
 	(
-		IMemoryPool *pmp
+		IMemoryPool *pmp,
+		IMDId *pmdidCastType
 	)
 	const
 {
@@ -656,7 +662,7 @@ CConstraintInterval::PexprConstructDisjunctionScalar
 	for (ULONG ul = 0; ul < ulLen; ul++)
 	{
 		CRange *prange = (*m_pdrgprng)[ul];
-		CExpression *pexprChild = prange->PexprScalar(pmp, m_pcr);
+		CExpression *pexprChild = prange->PexprScalar(pmp, m_pcr, pmdidCastType);
 		pdrgpexpr->Append(pexprChild);
 	}
 

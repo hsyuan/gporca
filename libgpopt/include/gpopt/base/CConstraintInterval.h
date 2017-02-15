@@ -226,7 +226,7 @@ namespace gpopt
 			CExpression *PexprScalar(IMemoryPool *pmp);
 
 			// scalar expression  which will be a disjunction
-			CExpression *PexprConstructDisjunctionScalar(IMemoryPool *pmp) const;
+			CExpression *PexprConstructDisjunctionScalar(IMemoryPool *pmp, IMDId *pmdidCastType) const;
 
 			// return constraint on a given column
 			virtual

@@ -4853,10 +4853,13 @@ CTranslatorExprToDXL::PdxlArrayExprOnPartKey
 	CConstraintInterval* pci = CConstraintInterval::PcnstrIntervalFromScalarArrayCmp(m_pmp, pexprPred, pcrPartKey);
 	GPOS_ASSERT(NULL != pci);
 
+	BOOL fNeedCast = CUtils::FScalarArrayCoerce((*pexprPred)[1]);
+	IMDId *pmdidCastType = fNeedCast ? pmdidTypePartKey : NULL;
+
 	// convert the interval into a disjunction
 	// (do not use CScalarArrayCmp::PexprExpand, it will use non-range
 	// comparators which cannot be translated to a partition filter)
-	CExpression *pexprDisj = pci->PexprConstructDisjunctionScalar(m_pmp);
+	CExpression *pexprDisj = pci->PexprConstructDisjunctionScalar(m_pmp, pmdidCastType);
 
 	CDXLNode* pdxln = PdxlnConjDisjOnPartKey(pexprDisj, pcrPartKey, pmdidTypePartKey, ulPartLevel, pfLTComparison, pfGTComparison, pfEQComparison);
 	pexprDisj->Release();

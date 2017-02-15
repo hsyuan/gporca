@@ -79,7 +79,7 @@ namespace gpopt
 			CRange(const CRange&);
 
 			// construct an equality predicate if possible
-			CExpression *PexprEquality(IMemoryPool *pmp, const CColRef *pcr);
+			CExpression *PexprEquality(IMemoryPool *pmp, const CColRef *pcr, IMDId *pmdidCastType);
 
 			// construct a scalar comparison expression from one of the ends
 			CExpression *PexprScalarCompEnd
@@ -89,7 +89,8 @@ namespace gpopt
 							ERangeInclusion eri,
 							IMDType::ECmpType ecmptIncl,
 							IMDType::ECmpType ecmptExcl,
-							const CColRef *pcr
+							const CColRef *pcr,
+							IMDId *pmdidCastType
 							);
 
 			// inverse of the inclusion option
@@ -202,7 +203,7 @@ namespace gpopt
 			CRange *PrngExtend(IMemoryPool *pmp, CRange *prange);
 
 			// construct scalar expression
-			CExpression *PexprScalar(IMemoryPool *pmp, const CColRef *pcr);
+			CExpression *PexprScalar(IMemoryPool *pmp, const CColRef *pcr, IMDId *pmdidCastType);
 
 			// is this interval unbounded
 			BOOL FUnbounded() const

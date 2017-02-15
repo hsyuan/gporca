@@ -1544,12 +1544,20 @@ CPredicateUtils::FCompareIdentToConstArray
 
 	if (!CUtils::FScalarArrayCmp(pexpr) ||
 		!CUtils::FScalarIdent((*pexpr)[0]) ||
-		!CUtils::FScalarArray((*pexpr)[1]))
+		(!CUtils::FScalarArray((*pexpr)[1]) && !CUtils::FScalarArrayCoerce((*pexpr)[1])))
 	{
 		return false;
 	}
 
 	CExpression *pexprArray = (*pexpr)[1];
+	if (CUtils::FScalarArrayCoerce(pexprArray))
+	{
+		pexprArray = (*pexprArray)[0];
+		if (!CUtils::FScalarArray(pexprArray))
+		{
+			return false;
+		}
+	}
 	const ULONG ulArity = pexprArray->UlArity();
 
 	BOOL fAllConsts = true;
@@ -1560,6 +1568,51 @@ CPredicateUtils::FCompareIdentToConstArray
 
 	return fAllConsts;
 }
+
+//---------------------------------------------------------------------------
+//	@function:
+//		CPredicateUtils::PexpExtractArrayExpr
+//
+//	@doc:
+// 		Extract the array expression inside an array coerce expression of
+//		array comparison. The array must be a constant array.
+//
+//---------------------------------------------------------------------------
+//CExpression *
+//CPredicateUtils::PexpExtractArrayCmpExpr
+//	(
+//	IMemoryPool *pmp,
+//	CExpression *pexprArrayCmp,
+//	)
+//{
+//	GPOS_ASSERT(NULL != pexprArrayCmp);
+//
+//	if (!CUtils::FScalarArrayCmp(pexpr) ||
+//		!CUtils::FScalarIdent((*pexpr)[0]) ||
+//		(!CUtils::FScalarArray((*pexpr)[1]) && !CUtils::FScalarArrayCoerce((*pexpr)[1])))
+//	{
+//		return false;
+//	}
+//
+//	CExpression *pexprArray = (*pexpr)[1];
+//	if (CUtils::FScalarArrayCoerce(pexprArray))
+//	{
+//		pexprArray = (*pexprArray)[0];
+//		if (!CUtils::FScalarArray(pexprArray))
+//		{
+//			return false;
+//		}
+//	}
+//	const ULONG ulArity = pexprArray->UlArity();
+//
+//	BOOL fAllConsts = true;
+//	for (ULONG ul = 0; fAllConsts && ul < ulArity; ul++)
+//	{
+//		fAllConsts = CUtils::FScalarConst((*pexprArray)[ul]);
+//	}
+//
+//	return fAllConsts;
+//}
 
 
 //---------------------------------------------------------------------------

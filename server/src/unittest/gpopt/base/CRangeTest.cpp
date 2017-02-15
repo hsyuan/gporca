@@ -392,7 +392,7 @@ CRangeTest::PrintRange
 	CRange *prange
 	)
 {
-	CExpression *pexpr = prange->PexprScalar(pmp, pcr);
+	CExpression *pexpr = prange->PexprScalar(pmp, pcr, NULL);
 
 	// debug print
 	CAutoTrace at(pmp);

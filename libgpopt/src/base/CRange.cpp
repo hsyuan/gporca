@@ -441,10 +441,11 @@ CExpression *
 CRange::PexprScalar
 	(
 	IMemoryPool *pmp,
-	const CColRef *pcr
+	const CColRef *pcr,
+	IMDId *pmdidCastType
 	)
 {
-	CExpression *pexprEq = PexprEquality(pmp, pcr);
+	CExpression *pexprEq = PexprEquality(pmp, pcr, pmdidCastType);
 	if (NULL != pexprEq)
 	{
 		return pexprEq;
@@ -457,7 +458,8 @@ CRange::PexprScalar
 								m_eriLeft,
 								IMDType::EcmptGEq,
 								IMDType::EcmptG,
-								pcr
+								pcr,
+								pmdidCastType
 								);
 
 	CExpression *pexprRight = PexprScalarCompEnd
@@ -467,7 +469,8 @@ CRange::PexprScalar
 								m_eriRight,
 								IMDType::EcmptLEq,
 								IMDType::EcmptL,
-								pcr
+								pcr,
+								pmdidCastType
 								);
 
 	DrgPexpr *pdrgpexpr = GPOS_NEW(pmp) DrgPexpr(pmp);
@@ -497,7 +500,8 @@ CExpression *
 CRange::PexprEquality
 	(
 	IMemoryPool *pmp,
-	const CColRef *pcr
+	const CColRef *pcr,
+	IMDId *pmdidCastType
 	)
 {
 	if (NULL == m_pdatumLeft || NULL == m_pdatumRight ||
@@ -509,6 +513,11 @@ CRange::PexprEquality
 
 	m_pdatumLeft->AddRef();
 	CExpression *pexprVal = GPOS_NEW(pmp) CExpression(pmp, GPOS_NEW(pmp) CScalarConst(pmp, m_pdatumLeft));
+	if (IMDId::FValid(pmdidCastType))
+	{
+		CMDAccessor *pmda = COptCtxt::PoctxtFromTLS()->Pmda();
+		pexprVal = CUtils::PexprCast(pmp, pmda, pexprVal, pmdidCastType);
+	}
 
 	return CUtils::PexprScalarCmp(pmp, pcr, pexprVal, IMDType::EcmptEq);
 }
@@ -529,7 +538,8 @@ CRange::PexprScalarCompEnd
 	ERangeInclusion eri,
 	IMDType::ECmpType ecmptIncl,
 	IMDType::ECmpType ecmptExcl,
-	const CColRef *pcr
+	const CColRef *pcr,
+	IMDId *pmdidCastType
 	)
 {
 	if (NULL == pdatum)
@@ -540,6 +550,11 @@ CRange::PexprScalarCompEnd
 
 	pdatum->AddRef();
 	CExpression *pexprVal = GPOS_NEW(pmp) CExpression(pmp, GPOS_NEW(pmp) CScalarConst(pmp, pdatum));
+	if (IMDId::FValid(pmdidCastType))
+	{
+		CMDAccessor *pmda = COptCtxt::PoctxtFromTLS()->Pmda();
+		pexprVal = CUtils::PexprCast(pmp, pmda, pexprVal, pmdidCastType);
+	}
 
 	IMDType::ECmpType ecmpt;
 	if (EriIncluded == eri)
