@@ -4994,6 +4994,10 @@ CTranslatorExprToDXL::PdxlnScCmpPartKey
 	GPOS_ASSERT(NULL != pexprPartKey && NULL != pexprOther);
 	GPOS_ASSERT(IMDType::EcmptOther != ecmpt);
 
+	// For varchar(1043) like columns, GPDB will automatically cast to text(25).
+	// So we need special care to get the actual type from the expression.
+	pmdidTypePartKey = CScalar::PopConvert(pexprPartKey->Pop())->PmdidType();
+
 	CDXLNode *pdxlnOther = PdxlnScalar(pexprOther);
 	IMDId *pmdidTypeOther = CScalar::PopConvert(pexprOther->Pop())->PmdidType();
 	IMDId *pmdidTypeCastExpr = NULL;
@@ -5030,20 +5034,22 @@ CTranslatorExprToDXL::PdxlnScCmpPartKey
 	}
 	else // list partition
 	{
-		CExpression *pexprNewOther = pexprOther;
 		ecmpt = CPredicateUtils::EcmptReverse(ecmpt);
 
-		// If the pexprPartKey is not comparable with pexprOther, but can be casted to pexprOther,
-		// and not yet casted, then we add a cast on top of pexprPartKey.
+		// TODO: maybe data loss eg. numeric->int
+		// need to come up with an test case.
+		// how about multi-cast on partkey and otherexpr?
+
+		// If the pexprOther is not comparable with pexprPartKey, but can be casted to pexprPartKey,
+		// and not yet casted, then we add a cast on top of pexprOther.
 		if (!CMDAccessorUtils::FCmpExists(m_pmda, pmdidTypeOther, pmdidTypePartKey, ecmpt)
 			&& CMDAccessorUtils::FCastExists(m_pmda, pmdidTypeOther, pmdidTypePartKey)
 			&& COperator::EopScalarCast != pexprOther->Pop()->Eopid())
 		{
-			pexprNewOther = CUtils::PexprCast(m_pmp, m_pmda, pexprOther, pmdidTypePartKey);
+			CExpression *pexprNewOther = CUtils::PexprCast(m_pmp, m_pmda, pexprOther, pmdidTypePartKey);
 			pexprOther->Release();
+			CTranslatorExprToDXLUtils::ExtractCastMdids(pexprNewOther->Pop(), &pmdidTypeCastExpr, &pmdidCastFunc);
 		}
-
-		CTranslatorExprToDXLUtils::ExtractCastMdids(pexprNewOther->Pop(), &pmdidTypeCastExpr, &pmdidCastFunc);
 
 		return CTranslatorExprToDXLUtils::PdxlnListFilterScCmp
 								(
