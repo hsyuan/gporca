@@ -122,6 +122,7 @@
 #include "naucrates/dxl/operators/CDXLScalarPartBoundInclusion.h"
 #include "naucrates/dxl/operators/CDXLScalarPartBoundOpen.h"
 #include "naucrates/dxl/operators/CDXLScalarPartListValues.h"
+#include "naucrates/dxl/operators/CDXLScalarPartListNullTest.h"
 
 #include "naucrates/dxl/operators/CDXLLogicalTVF.h"
 #include "naucrates/dxl/operators/CDXLLogicalGet.h"

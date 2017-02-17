@@ -251,6 +251,7 @@ CDXLTokens::Init
 			{EdxltokenScalarPartBoundInclusion, GPOS_WSZ_LIT("PartBoundInclusion")},
 			{EdxltokenScalarPartBoundOpen, GPOS_WSZ_LIT("PartBoundOpen")},
 			{EdxltokenScalarPartListValues, GPOS_WSZ_LIT("PartListValues")},
+			{EdxltokenScalarPartListNullTest, GPOS_WSZ_LIT("PartListNullTest")},
 			{EdxltokenScalarResidualFilter, GPOS_WSZ_LIT("ResidualFilter")},
 			{EdxltokenScalarPropagationExpr, GPOS_WSZ_LIT("PropagationExpression")},
 			{EdxltokenScalarPrintableFilter, GPOS_WSZ_LIT("PrintableFilter")},

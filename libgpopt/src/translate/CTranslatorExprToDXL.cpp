@@ -5079,10 +5079,17 @@ CTranslatorExprToDXL::PdxlnScNullTestPartKey
 	(
 	IMDId *pmdidTypePartKey,
 	ULONG ulPartLevel,
-	BOOL , //fRangePart,
+	BOOL fRangePart,
 	BOOL fIsNull
 	)
 {
+	if (!fRangePart) // list partition
+	{
+		CDXLNode *pdxlnPartListNullTest = GPOS_NEW(m_pmp) CDXLNode(m_pmp, GPOS_NEW(m_pmp) CDXLScalarPartListNullTest(m_pmp, ulPartLevel, fIsNull));
+		CDXLNode *pdxlnDefault = GPOS_NEW(m_pmp) CDXLNode(m_pmp, GPOS_NEW(m_pmp) CDXLScalarPartDefault(m_pmp, ulPartLevel));
+		return GPOS_NEW(m_pmp) CDXLNode(m_pmp, GPOS_NEW(m_pmp) CDXLScalarBoolExpr(m_pmp, Edxlor), pdxlnPartListNullTest, pdxlnDefault);
+	}
+
 	pmdidTypePartKey->AddRef();
 	CDXLNode *pdxlnPredicateMin = GPOS_NEW(m_pmp) CDXLNode
 							(
