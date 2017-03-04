@@ -4722,6 +4722,11 @@ CTranslatorExprToDXL::ConstructLevelFiltersPartitionSelectorRange
 			}
 			else if (fListPart)
 			{
+				if (!CMDAccessorUtils::FCmpExists(m_pmda, pmdidTypePartKey, pmdidTypeOther, IMDType::EcmptEq)
+					&& CMDAccessorUtils::FCastExists(m_pmda, pmdidTypePartKey, pmdidTypeOther))
+				{
+					pmdidTypePartKey = pmdidTypeOther;
+				}
 				// TODO: Add fDefaultPartition as argument
 				pdxlnFilter = CTranslatorExprToDXLUtils::PdxlnListFilterScCmp
 								(
