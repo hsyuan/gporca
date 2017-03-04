@@ -283,7 +283,8 @@ namespace gpopt
 				IMDId *pmdidTypeCastExpr,
 				IMDId *pmdidCastFunc,
 				IMDType::ECmpType ecmpt,
-				ULONG ulPartLevel
+				ULONG ulPartLevel,
+				BOOL fHasDefaultPart
 				);
 
 			// construct a filter node for a range predicate

@@ -743,7 +743,8 @@ CTranslatorExprToDXLUtils::PdxlnListFilterScCmp
 	IMDId *pmdidTypeCastExpr,
 	IMDId *pmdidCastFunc,
 	IMDType::ECmpType ecmpt,
-	ULONG ulPartLevel
+	ULONG ulPartLevel,
+	BOOL fHasDefaultPart
 	)
 {
 	IMDId *pmdidScCmp = NULL;
@@ -786,8 +787,15 @@ CTranslatorExprToDXLUtils::PdxlnListFilterScCmp
 												pdxlnPartList
 												);
 
-	CDXLNode *pdxlnDefault = GPOS_NEW(pmp) CDXLNode(pmp, GPOS_NEW(pmp) CDXLScalarPartDefault(pmp, ulPartLevel));
-	return GPOS_NEW(pmp) CDXLNode(pmp, GPOS_NEW(pmp) CDXLScalarBoolExpr(pmp, Edxlor), pdxlnScCmp, pdxlnDefault);
+	if (fHasDefaultPart)
+	{
+		CDXLNode *pdxlnDefault = GPOS_NEW(pmp) CDXLNode(pmp, GPOS_NEW(pmp) CDXLScalarPartDefault(pmp, ulPartLevel));
+		return GPOS_NEW(pmp) CDXLNode(pmp, GPOS_NEW(pmp) CDXLScalarBoolExpr(pmp, Edxlor), pdxlnScCmp, pdxlnDefault);
+	}
+	else
+	{
+		return pdxlnScCmp;
+	}
 }
 
 //---------------------------------------------------------------------------

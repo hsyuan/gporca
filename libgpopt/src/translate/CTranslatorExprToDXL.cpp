@@ -4738,7 +4738,8 @@ CTranslatorExprToDXL::ConstructLevelFiltersPartitionSelectorRange
 								NULL /*pmdidTypeCastExpr*/,
 								NULL /*pmdidCastFunc*/,
 								IMDType::EcmptEq,
-								ulLevel
+								ulLevel,
+								fDefaultPartition
 								);
 			}
 		}
@@ -5066,7 +5067,8 @@ CTranslatorExprToDXL::PdxlnScCmpPartKey
 								pmdidTypeCastExpr,
 								pmdidCastFunc,
 								ecmpt,
-								ulPartLevel
+								ulPartLevel,
+								true // TODO: need to pass the real value here
 								);
 	}
 }
