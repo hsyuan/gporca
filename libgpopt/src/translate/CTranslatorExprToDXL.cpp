@@ -4693,7 +4693,6 @@ CTranslatorExprToDXL::ConstructLevelFiltersPartitionSelectorRange
 		IMDId *pmdidTypePartKey = pcrPartKey->Pmdtype()->Pmdid();
 		CHAR szPartType = pmdrel->szPartType(ulLevel);
 		BOOL fRangePart = IMDRelation::ErelpartitionRange == szPartType;
-		BOOL fListPart = IMDRelation::ErelpartitionList == szPartType;
 
 		CDXLNode *pdxlnFilter = NULL;
 		BOOL fDefaultPartition = pbsDefaultParts->FBit(ulLevel);
@@ -4724,14 +4723,14 @@ CTranslatorExprToDXL::ConstructLevelFiltersPartitionSelectorRange
 								ulLevel
 								);
 			}
-			else if (fListPart)
+			else // list partition
 			{
 				if (!CMDAccessorUtils::FCmpExists(m_pmda, pmdidTypePartKey, pmdidTypeOther, IMDType::EcmptEq)
 					&& CMDAccessorUtils::FCastExists(m_pmda, pmdidTypePartKey, pmdidTypeOther))
 				{
 					pmdidTypePartKey = pmdidTypeOther;
 				}
-				// TODO: Add fDefaultPartition as argument
+
 				pdxlnFilter = CTranslatorExprToDXLUtils::PdxlnListFilterScCmp
 								(
 								m_pmp,

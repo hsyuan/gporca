@@ -75,8 +75,7 @@ namespace gpmd
 			enum Erelpartitiontype
 			{
 				ErelpartitionRange = 'r',
-				ErelpartitionList = 'l',
-				ErelpartitionHash = 'h'
+				ErelpartitionList = 'l'
 			};
 
 		protected:
