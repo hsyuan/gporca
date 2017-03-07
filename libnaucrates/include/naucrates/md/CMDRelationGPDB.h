@@ -248,6 +248,10 @@ namespace gpmd
 			virtual 
 			const IMDColumn *PmdcolPartColumn(ULONG ulPos) const;
 
+			// retrieve list of partition types
+			virtual
+			DrgPsz *PdrgpszPartTypes() const;
+
 			// retrieve the partition type of the given level
 			virtual
 			CHAR szPartType(ULONG ulLevel) const;

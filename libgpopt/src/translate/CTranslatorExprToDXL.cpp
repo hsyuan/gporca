@@ -4365,6 +4365,7 @@ CTranslatorExprToDXL::PdxlnPartitionSelectorExpand
 	// construct propagation expression
 	CPartIndexMap *ppimDrvd = m_pdpplan->Ppim();
 	ULONG ulScanId = popSelector->UlScanId();
+	const IMDRelation *pmdrel = (IMDRelation *) m_pmda->Pmdrel(popSelector->Pmdid());
 	CDXLNode *pdxlnPropagation = CTranslatorExprToDXLUtils::PdxlnPropExprPartitionSelector
 									(
 									m_pmp,
@@ -4373,7 +4374,8 @@ CTranslatorExprToDXL::PdxlnPartitionSelectorExpand
 									ppimDrvd->FPartialScans(ulScanId),
 									ppimDrvd->Ppartcnstrmap(ulScanId),
 									popSelector->Pdrgpdrgpcr(),
-									ulScanId
+									ulScanId,
+									pmdrel->PdrgpszPartTypes()
 									);
 
 	// translate printable filter
@@ -4498,6 +4500,7 @@ CTranslatorExprToDXL::PdxlnPartitionSelectorFilter
 	TranslatePartitionFilters(pexpr, fPassThrough, &pdxlnEqFilters, &pdxlnFilters, &pdxlnResidual);
 
 	// construct propagation expression
+	const IMDRelation *pmdrel = (IMDRelation *) m_pmda->Pmdrel(popSelector->Pmdid());
 	CDXLNode *pdxlnPropagation = CTranslatorExprToDXLUtils::PdxlnPropExprPartitionSelector
 									(
 									m_pmp,
@@ -4506,7 +4509,8 @@ CTranslatorExprToDXL::PdxlnPartitionSelectorFilter
 									!fPassThrough && fPartialScans, //fConditional
 									ppartcnstrmap,
 									popSelector->Pdrgpdrgpcr(),
-									popSelector->UlScanId()
+									popSelector->UlScanId(),
+									pmdrel->PdrgpszPartTypes()
 									);
 
 	// translate printable filter

@@ -75,6 +75,14 @@ namespace gpmd
 				return NULL;
 			}
 			
+			// retrieve list of partition types
+			virtual
+			DrgPsz *PdrgpszPartTypes() const
+			{
+				GPOS_ASSERT(!"CTAS tables have no partition types");
+				return NULL;
+			}
+
 			// retrieve the partition column at the given position
 			virtual
 			CHAR szPartType

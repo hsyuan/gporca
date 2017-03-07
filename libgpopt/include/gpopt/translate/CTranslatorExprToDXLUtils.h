@@ -89,7 +89,8 @@ namespace gpopt
 				CMDAccessor *pmda, 
 				CColumnFactory *pcf,
 				CConstraint *pcnstr,
-				DrgDrgPcr *pdrgpdrgpcrPartKeys
+				DrgDrgPcr *pdrgpdrgpcrPartKeys,
+				BOOL fRangePart
 				);
 			
 			// construct a test for a conjunction or disjunction-based part constraint
@@ -101,7 +102,8 @@ namespace gpopt
 				CColumnFactory *pcf,
 				DrgPcnstr *pdrgpcnstr,
 				BOOL fConjunction,
-				DrgDrgPcr *pdrgpdrgpcrPartKeys
+				DrgDrgPcr *pdrgpdrgpcrPartKeys,
+				BOOL fRangePart
 				);
 			
 			// construct a test for a conjunction-based part constraint
@@ -112,7 +114,8 @@ namespace gpopt
 				CMDAccessor *pmda, 
 				CColumnFactory *pcf,
 				CConstraint *pcnstr,
-				DrgDrgPcr *pdrgpdrgpcrPartKeys
+				DrgDrgPcr *pdrgpdrgpcrPartKeys,
+				BOOL fRangePart
 				);
 			
 			// construct a test for a disjunction-based part constraint
@@ -123,7 +126,8 @@ namespace gpopt
 				CMDAccessor *pmda, 
 				CColumnFactory *pcf,
 				CConstraint *pcnstr,
-				DrgDrgPcr *pdrgpdrgpcrPartKeys
+				DrgDrgPcr *pdrgpdrgpcrPartKeys,
+				BOOL fRangePart
 				);
 			
 			// construct a test for a negation-based part constraint
@@ -134,7 +138,8 @@ namespace gpopt
 				CMDAccessor *pmda, 
 				CColumnFactory *pcf,
 				CConstraint *pcnstr,
-				DrgDrgPcr *pdrgpdrgpcrPartKeys
+				DrgDrgPcr *pdrgpdrgpcrPartKeys,
+				BOOL fRangePart
 				);
 			
 			// construct a test for an interval-based part constraint
@@ -144,7 +149,8 @@ namespace gpopt
 				IMemoryPool *pmp, 
 				CMDAccessor *pmda, 
 				CConstraint *pcnstr,
-				DrgDrgPcr *pdrgpdrgpcrPartKeys
+				DrgDrgPcr *pdrgpdrgpcrPartKeys,
+				BOOL fRangePart
 				);
 
 			// construct a test for a range in a part constraint
@@ -155,7 +161,8 @@ namespace gpopt
 				CMDAccessor *pmda, 
 				CRange *prng,
 				IMDId *pmdidPartKeyType,
-				ULONG ulPartLevel
+				ULONG ulPartLevel,
+				BOOL fRangePart
 				);
 			
 			// construct a test for testing range containment with respect to the
@@ -353,7 +360,8 @@ namespace gpopt
 				CMDAccessor *pmda, 
 				CColumnFactory *pcf,
 				const CPartConstraint *ppartcnstr,
-				DrgDrgPcr *pdrgpdrgpcrPartKeys
+				DrgDrgPcr *pdrgpdrgpcrPartKeys,
+				DrgPsz *pdrgszPartTypes
 				);
 			
 			// construct a nested if statement testing the constraints in the 
@@ -365,7 +373,8 @@ namespace gpopt
 				CMDAccessor *pmda, 
 				CColumnFactory *pcf,
 				PartCnstrMap *ppartcnstrmap,
-				DrgDrgPcr *pdrgpdrgpcrPartKeys
+				DrgDrgPcr *pdrgpdrgpcrPartKeys,
+				DrgPsz *pdrgszPartTypes
 				);
 			
 			// check if the DXL Node is a scalar const TRUE
@@ -416,7 +425,8 @@ namespace gpopt
 				BOOL fConditional,
 				PartCnstrMap *ppartcnstrmap,
 				DrgDrgPcr *pdrgpdrgpcrKeys,
-				ULONG ulScanId
+				ULONG ulScanId,
+				DrgPsz *pdrgszPartTypes
 				);
 
 			// create a DXL project elem node from as a scalar identifier for the
