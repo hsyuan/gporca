@@ -4691,7 +4691,7 @@ CTranslatorExprToDXL::ConstructLevelFiltersPartitionSelectorRange
 	{
 		CColRef *pcrPartKey = CUtils::PcrExtractPartKey(pdrgpdrgpcrPartKeys, ulLevel);
 		IMDId *pmdidTypePartKey = pcrPartKey->Pmdtype()->Pmdid();
-		CHAR szPartType = pmdrel->szPartType(ulLevel);
+		CHAR szPartType = pmdrel->SzPartType(ulLevel);
 		BOOL fRangePart = IMDRelation::ErelpartitionRange == szPartType;
 
 		CDXLNode *pdxlnFilter = NULL;
@@ -5045,10 +5045,6 @@ CTranslatorExprToDXL::PdxlnScCmpPartKey
 	{
 		ecmpt = CPredicateUtils::EcmptReverse(ecmpt);
 
-		// TODO: maybe data loss eg. numeric->int
-		// need to come up with an test case.
-		// how about multi-cast on partkey and otherexpr?
-
 		// If the pexprOther is not comparable with pexprPartKey, but can be casted to pexprPartKey,
 		// and not yet casted, then we add a cast on top of pexprOther.
 		if (!CMDAccessorUtils::FCmpExists(m_pmda, pmdidTypeOther, pmdidTypePartKey, ecmpt)
@@ -5071,7 +5067,7 @@ CTranslatorExprToDXL::PdxlnScCmpPartKey
 								pmdidCastFunc,
 								ecmpt,
 								ulPartLevel,
-								true // TODO: need to pass the real value here
+								true
 								);
 	}
 }

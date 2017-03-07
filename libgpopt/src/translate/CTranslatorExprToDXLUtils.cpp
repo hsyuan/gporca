@@ -600,18 +600,18 @@ CTranslatorExprToDXLUtils::PdxlnPartialScanTestRange
 		IMDId *pmdidEq = pmdtype->PmdidCmp(IMDType::EcmptEq);
 		pmdidEq->AddRef();
 		CDXLNode *pdxlnScCmp = GPOS_NEW(pmp) CDXLNode
-														(
-														pmp,
-														GPOS_NEW(pmp) CDXLScalarArrayComp
-																	(
-																	pmp,
-																	pmdidEq,
-																	GPOS_NEW(pmp) CWStringConst(pmp, pmdidEq->Wsz()),
-																	Edxlarraycomptypeany
-																	),
-														pdxlnScalar,
-														pdxlnPartList
-														);
+													(
+													pmp,
+													GPOS_NEW(pmp) CDXLScalarArrayComp
+																(
+																pmp,
+																pmdidEq,
+																GPOS_NEW(pmp) CWStringConst(pmp, pmdidEq->Wsz()),
+																Edxlarraycomptypeany
+																),
+													pdxlnScalar,
+													pdxlnPartList
+													);
 		return pdxlnScCmp;
 	}
 }
@@ -766,14 +766,7 @@ CTranslatorExprToDXLUtils::PdxlnRangePointPredicate
 	return GPOS_NEW(pmp) CDXLNode(pmp, GPOS_NEW(pmp) CDXLScalarBoolExpr(pmp, Edxlor), pdxlnPredicateInclusive, pdxlnPredicateExclusive);
 }
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CTranslatorExprToDXLUtils::PdxlnRangeFilterScCmp
-//
-//	@doc:
-// 		Construct a predicate node for a list partition filter
-//
-//---------------------------------------------------------------------------
+// Construct a predicate node for a list partition filter
 CDXLNode *
 CTranslatorExprToDXLUtils::PdxlnListFilterScCmp
 	(

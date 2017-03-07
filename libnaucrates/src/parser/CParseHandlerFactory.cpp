@@ -1579,14 +1579,7 @@ CParseHandlerFactory::PphScalarPartBoundOpen
 	return GPOS_NEW(pmp) CParseHandlerScalarPartBoundOpen(pmp, pphm, pphRoot);
 }
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CParseHandlerFactory::PphScalarPartListValues
-//
-//	@doc:
-//		Creates a parse handler for parsing a scalar part list values
-//
-//---------------------------------------------------------------------------
+// Creates a parse handler for parsing a scalar part list values
 CParseHandlerBase *
 CParseHandlerFactory::PphScalarPartListValues
 	(
@@ -1598,14 +1591,7 @@ CParseHandlerFactory::PphScalarPartListValues
 	return GPOS_NEW(pmp) CParseHandlerScalarPartListValues(pmp, pphm, pphRoot);
 }
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CParseHandlerFactory::PphScalarPartListNullTest
-//
-//	@doc:
-//		Creates a parse handler for parsing a scalar part list null test
-//
-//---------------------------------------------------------------------------
+// Creates a parse handler for parsing a scalar part list null test
 CParseHandlerBase *
 CParseHandlerFactory::PphScalarPartListNullTest
 	(

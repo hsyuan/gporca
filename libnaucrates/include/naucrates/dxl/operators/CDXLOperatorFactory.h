@@ -801,6 +801,8 @@ namespace gpdxl
 						);
 			}
 
+			// parse a comma-separated list of CHAR partition types into a dynamic array.
+			// will raise an exception if list is not well-formed
 			static
 			DrgPsz *PdrgpszFromXMLCh
 				(
@@ -808,16 +810,7 @@ namespace gpdxl
 				const XMLCh *xmlsz,
 				Edxltoken edxltokenAttr,
 				Edxltoken edxltokenElement
-				)
-			{
-				return PdrgptFromXMLCh<CHAR, CleanupDelete, CValueFromXmlstr>
-						(
-						pmm,
-						xmlsz,
-						edxltokenAttr,
-						edxltokenElement
-						);
-			}
+				);
 
 			// parse a semicolon-separated list of comma-separated unsigned 
 			// long numbers into a dynamc array of unsigned integer arrays

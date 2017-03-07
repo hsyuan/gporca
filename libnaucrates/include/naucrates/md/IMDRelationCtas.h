@@ -85,11 +85,7 @@ namespace gpmd
 
 			// retrieve the partition column at the given position
 			virtual
-			CHAR szPartType
-				(
-				ULONG // ulPos
-				)
-				const
+			CHAR SzPartType(ULONG /*ulPos*/) const
 			{
 				GPOS_ASSERT(!"CTAS tables have no partition types");
 				return (CHAR) 0;

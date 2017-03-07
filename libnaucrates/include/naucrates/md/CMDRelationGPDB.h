@@ -254,7 +254,7 @@ namespace gpmd
 
 			// retrieve the partition type of the given level
 			virtual
-			CHAR szPartType(ULONG ulLevel) const;
+			CHAR SzPartType(ULONG ulLevel) const;
 
 			// number of indices
 			virtual 

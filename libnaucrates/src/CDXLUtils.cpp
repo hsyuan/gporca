@@ -1973,14 +1973,7 @@ CDXLUtils::PstrSerialize
 	return pstrKeys;
 }
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CDXLUtils::PstrSerializeSz
-//
-//	@doc:
-//		Serialize a list of chars into a comma-separated string
-//
-//---------------------------------------------------------------------------
+// Serialize a list of chars into a comma-separated string
 CWStringDynamic *
 CDXLUtils::PstrSerializeSz
 	(

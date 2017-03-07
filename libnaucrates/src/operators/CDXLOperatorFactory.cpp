@@ -2304,14 +2304,7 @@ CDXLOperatorFactory::SValueFromAttrs
 			);
 }
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CDXLOperatorFactory::CValueFromXmlstr
-//
-//	@doc:
-//	  	Converts the attribute value from xml string to char
-//
-//---------------------------------------------------------------------------
+// Converts the attribute value from xml string to char
 CHAR
 CDXLOperatorFactory::CValueFromXmlstr
 	(
@@ -3419,6 +3412,26 @@ CDXLOperatorFactory::PdrgpmdidFromXMLCh
 	}
 
 	return pdrgpmdid;
+}
+
+// Parse a comma-separated list of CHAR partition types into a dynamic array.
+// Will raise an exception if list is not well-formed
+DrgPsz *
+CDXLOperatorFactory::PdrgpszFromXMLCh
+	(
+	CDXLMemoryManager *pmm,
+	const XMLCh *xmlsz,
+	Edxltoken edxltokenAttr,
+	Edxltoken edxltokenElement
+	)
+{
+	return PdrgptFromXMLCh<CHAR, CleanupDelete, CValueFromXmlstr>
+			(
+			pmm,
+			xmlsz,
+			edxltokenAttr,
+			edxltokenElement
+			);
 }
 
 //---------------------------------------------------------------------------

@@ -2,12 +2,8 @@
 //	Greenplum Database
 //	Copyright (C) 2017 Pivotal, Inc.
 //
-//	@filename:
-//		CDXLScalarPartListValues.h
-//
-//	@doc:
-//		Class for representing DXL Part List Values expressions
-//		These expressions indicate the constant values for the list partition
+//	Class for representing DXL Part List Values expressions
+//	These expressions indicate the constant values for the list partition
 //---------------------------------------------------------------------------
 
 #ifndef GPDXL_CDXLScalarPartListValues_H
@@ -19,18 +15,9 @@
 namespace gpdxl
 {
 
-	//---------------------------------------------------------------------------
-	//	@class:
-	//		CDXLScalarPartListValues
-	//
-	//	@doc:
-	//		Class for representing DXL Part List Values expressions
-	//
-	//---------------------------------------------------------------------------
 	class CDXLScalarPartListValues : public CDXLScalar
 	{
 		private:
-
 			// partitioning level
 			ULONG m_ulLevel;
 
@@ -57,16 +44,10 @@ namespace gpdxl
 			const CWStringConst *PstrOpName() const;
 
 			// partitioning level
-			ULONG UlLevel() const
-			{
-				return m_ulLevel;
-			}
+			ULONG UlLevel() const;
 
 			// element type
-			IMDId *PmdidType() const
-			{
-				return m_pmdidType;
-			}
+			IMDId *PmdidType() const;
 
 			// serialize operator in DXL format
 			virtual
@@ -74,14 +55,7 @@ namespace gpdxl
 
 			// does the operator return a boolean result
 			virtual
-			BOOL FBoolean
-					(
-					CMDAccessor * //pmda
-					)
-					const
-			{
-				return false;
-			}
+			BOOL FBoolean(CMDAccessor *pmda) const;
 
 #ifdef GPOS_DEBUG
 			// checks whether the operator has valid structure, i.e. number and
@@ -92,16 +66,7 @@ namespace gpdxl
 
 			// conversion function
 			static
-			CDXLScalarPartListValues *PdxlopConvert
-				(
-				CDXLOperator *pdxlop
-				)
-			{
-				GPOS_ASSERT(NULL != pdxlop);
-				GPOS_ASSERT(EdxlopScalarPartListValues == pdxlop->Edxlop());
-
-				return dynamic_cast<CDXLScalarPartListValues*>(pdxlop);
-			}
+			CDXLScalarPartListValues *PdxlopConvert(CDXLOperator *pdxlop);
 	};
 }
 

@@ -2,12 +2,8 @@
 //	Greenplum Database
 //	Copyright (C) 2017 Pivotal, Inc.
 //
-//	@filename:
-//		CParseHandlerScalarPartListNullTest.cpp
-//
-//	@doc:
-//		Implementation of the SAX parse handler class for parsing part list
-//		null test
+//	Implementation of the SAX parse handler class for parsing part list
+//	null test
 //---------------------------------------------------------------------------
 
 #include "naucrates/dxl/parser/CParseHandlerScalarPartListNullTest.h"
@@ -22,14 +18,7 @@ using namespace gpdxl;
 
 XERCES_CPP_NAMESPACE_USE
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CParseHandlerScalarPartListNullTest::CParseHandlerScalarPartListNullTest
-//
-//	@doc:
-//		Ctor
-//
-//---------------------------------------------------------------------------
+// Ctor
 CParseHandlerScalarPartListNullTest::CParseHandlerScalarPartListNullTest
 	(
 	IMemoryPool *pmp,
@@ -41,14 +30,7 @@ CParseHandlerScalarPartListNullTest::CParseHandlerScalarPartListNullTest
 {
 }
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CParseHandlerScalarPartListNullTest::StartElement
-//
-//	@doc:
-//		Invoked by Xerces to process an opening tag
-//
-//---------------------------------------------------------------------------
+// Invoked by Xerces to process an opening tag
 void
 CParseHandlerScalarPartListNullTest::StartElement
 	(
@@ -70,14 +52,7 @@ CParseHandlerScalarPartListNullTest::StartElement
 	m_pdxln = GPOS_NEW(m_pmp) CDXLNode (m_pmp, GPOS_NEW(m_pmp) CDXLScalarPartListNullTest(m_pmp, ulLevel, fIsNull));
 }
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CParseHandlerScalarPartListNullTest::EndElement
-//
-//	@doc:
-//		Invoked by Xerces to process a closing tag
-//
-//---------------------------------------------------------------------------
+// Invoked by Xerces to process a closing tag
 void
 CParseHandlerScalarPartListNullTest::EndElement
 	(

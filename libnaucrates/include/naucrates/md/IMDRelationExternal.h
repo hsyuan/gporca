@@ -96,7 +96,7 @@ namespace gpmd
 
 			// retrieve the partition type at the given position
 			virtual
-			CHAR szPartType(ULONG /*ulPos*/) const
+			CHAR SzPartType(ULONG /*ulPos*/) const
 			{
 				GPOS_ASSERT(!"External tables have no partition types");
 				return (CHAR) 0;

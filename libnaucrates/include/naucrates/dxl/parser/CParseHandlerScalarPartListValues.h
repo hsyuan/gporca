@@ -2,11 +2,7 @@
 //	Greenplum Database
 //	Copyright (C) 2017 Pivotal Inc.
 //
-//	@filename:
-//		CParseHandlerScalarPartListValues.h
-//
-//	@doc:
-//		SAX parse handler class for parsing scalar part list values
+//	SAX parse handler class for parsing scalar part list values
 //---------------------------------------------------------------------------
 
 #ifndef GPDXL_CParseHandlerScalarPartListValues_H
@@ -21,14 +17,6 @@ namespace gpdxl
 
 	XERCES_CPP_NAMESPACE_USE
 
-	//---------------------------------------------------------------------------
-	//	@class:
-	//		CParseHandlerScalarPartListValues
-	//
-	//	@doc:
-	//		Parse handler class for parsing scalar part list values
-	//
-	//---------------------------------------------------------------------------
 	class CParseHandlerScalarPartListValues : public CParseHandlerScalarOp
 	{
 		private:

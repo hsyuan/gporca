@@ -68,10 +68,7 @@ namespace gpmd
 				EreldistrSentinel
 			};
 
-			//-------------------------------------------------------------------
-			//	@doc:
-			//		Partition type of a partitioned relation
-			//-------------------------------------------------------------------
+			// Partition type of a partitioned relation
 			enum Erelpartitiontype
 			{
 				ErelpartitionRange = 'r',
@@ -183,7 +180,7 @@ namespace gpmd
 
 			// retrieve the partition type of the given partition level
 			virtual
-			CHAR szPartType(ULONG ulPos) const = 0;
+			CHAR SzPartType(ULONG ulPos) const = 0;
 
 			// number of indices
 			virtual 

@@ -2,11 +2,7 @@
 //	Greenplum Database
 //	Copyright (C) 2017 Pivotal Inc.
 //
-//	@filename:
-//		CParseHandlerScalarPartListNullTest.h
-//
-//	@doc:
-//		SAX parse handler class for parsing scalar part list null test
+//	SAX parse handler class for parsing scalar part list null test
 //---------------------------------------------------------------------------
 
 #ifndef GPDXL_CParseHandlerScalarPartListNullTest_H
@@ -21,14 +17,6 @@ namespace gpdxl
 
 	XERCES_CPP_NAMESPACE_USE
 
-	//---------------------------------------------------------------------------
-	//	@class:
-	//		CParseHandlerScalarPartListNullTest
-	//
-	//	@doc:
-	//		Parse handler class for parsing scalar part list null test
-	//
-	//---------------------------------------------------------------------------
 	class CParseHandlerScalarPartListNullTest : public CParseHandlerScalarOp
 	{
 		private:

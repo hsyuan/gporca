@@ -2,11 +2,7 @@
 //	Greenplum Database
 //	Copyright (C) 2017 Pivotal, Inc.
 //
-//	@filename:
-//		CDXLScalarPartListValues.cpp
-//
-//	@doc:
-//		Implementation of DXL Part List Values expression
+//	Implementation of DXL Part List Values expression
 //---------------------------------------------------------------------------
 
 #include "naucrates/dxl/operators/CDXLScalarPartListValues.h"
@@ -20,14 +16,7 @@ using namespace gpmd;
 using namespace gpos;
 using namespace gpdxl;
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CDXLScalarPartListValues::CDXLScalarPartListValues
-//
-//	@doc:
-//		Ctor
-//
-//---------------------------------------------------------------------------
+// Ctor
 CDXLScalarPartListValues::CDXLScalarPartListValues
 	(
 	IMemoryPool *pmp,
@@ -43,55 +32,52 @@ CDXLScalarPartListValues::CDXLScalarPartListValues
 }
 
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CDXLScalarPartListValues::~CDXLScalarPartListValues
-//
-//	@doc:
-//		Dtor
-//
-//---------------------------------------------------------------------------
+// Dtor
 CDXLScalarPartListValues::~CDXLScalarPartListValues()
 {
 	m_pmdidType->Release();
 }
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CDXLScalarPartListValues::Edxlop
-//
-//	@doc:
-//		Operator type
-//
-//---------------------------------------------------------------------------
+// Operator type
 Edxlopid
 CDXLScalarPartListValues::Edxlop() const
 {
 	return EdxlopScalarPartListValues;
 }
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CDXLScalarPartListValues::PstrOpName
-//
-//	@doc:
-//		Operator name
-//
-//---------------------------------------------------------------------------
+// Operator name
 const CWStringConst *
 CDXLScalarPartListValues::PstrOpName() const
 {
 	return CDXLTokens::PstrToken(EdxltokenScalarPartListValues);
 }
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CDXLScalarPartListValues::SerializeToDXL
-//
-//	@doc:
-//		Serialize operator in DXL format
-//
-//---------------------------------------------------------------------------
+// partitioning level
+ULONG
+CDXLScalarPartListValues::UlLevel() const
+{
+	return m_ulLevel;
+}
+
+// element type
+IMDId *
+CDXLScalarPartListValues::PmdidType() const
+{
+	return m_pmdidType;
+}
+
+// does the operator return a boolean result
+BOOL
+CDXLScalarPartListValues::FBoolean
+	(
+	CMDAccessor * //pmda
+	)
+	const
+{
+	return false;
+}
+
+// Serialize operator in DXL format
 void
 CDXLScalarPartListValues::SerializeToDXL
 	(
@@ -109,14 +95,7 @@ CDXLScalarPartListValues::SerializeToDXL
 }
 
 #ifdef GPOS_DEBUG
-//---------------------------------------------------------------------------
-//	@function:
-//		CDXLScalarPartListValues::AssertValid
-//
-//	@doc:
-//		Checks whether operator node is well-structured
-//
-//---------------------------------------------------------------------------
+// Checks whether operator node is well-structured
 void
 CDXLScalarPartListValues::AssertValid
 	(
@@ -128,5 +107,18 @@ CDXLScalarPartListValues::AssertValid
 	GPOS_ASSERT(0 == pdxln->UlArity());
 }
 #endif // GPOS_DEBUG
+
+// conversion function
+CDXLScalarPartListValues *
+CDXLScalarPartListValues::PdxlopConvert
+	(
+	CDXLOperator *pdxlop
+	)
+{
+	GPOS_ASSERT(NULL != pdxlop);
+	GPOS_ASSERT(EdxlopScalarPartListValues == pdxlop->Edxlop());
+
+	return dynamic_cast<CDXLScalarPartListValues*>(pdxlop);
+}
 
 // EOF

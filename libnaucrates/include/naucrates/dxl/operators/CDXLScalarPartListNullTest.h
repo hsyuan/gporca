@@ -2,13 +2,9 @@
 //	Greenplum Database
 //	Copyright (C) 2017 Pivotal, Inc.
 //
-//	@filename:
-//		CDXLScalarPartListNullTest.h
-//
-//	@doc:
-//		Class for representing DXL Part list null test expressions
-//		These expressions indicate whether the list values of a part
-//		contain NULL value or not
+//	Class for representing DXL Part list null test expressions
+//	These expressions indicate whether the list values of a part
+//	contain NULL value or not
 //---------------------------------------------------------------------------
 
 #ifndef GPDXL_CDXLScalarPartListNullTest_H
@@ -20,16 +16,6 @@
 namespace gpdxl
 {
 
-	//---------------------------------------------------------------------------
-	//	@class:
-	//		CDXLScalarPartListNullTest
-	//
-	//	@doc:
-	//		Class for representing DXL Part list null test expressions
-	//		These expressions indicate whether the list values of a part
-	//		contain NULL value or not
-	//
-	//---------------------------------------------------------------------------
 	class CDXLScalarPartListNullTest : public CDXLScalar
 	{
 		private:
@@ -56,16 +42,10 @@ namespace gpdxl
 			const CWStringConst *PstrOpName() const;
 
 			// partitioning level
-			ULONG UlLevel() const
-			{
-				return m_ulLevel;
-			}
+			ULONG UlLevel() const;
 
 			// Null Test type (true for 'is null', false for 'is not null')
-			BOOL FIsNull() const
-			{
-				return m_fIsNull;
-			}
+			BOOL FIsNull() const;
 
 			// serialize operator in DXL format
 			virtual
@@ -73,14 +53,7 @@ namespace gpdxl
 
 			// does the operator return a boolean result
 			virtual
-			BOOL FBoolean
-					(
-					CMDAccessor * //pmda
-					)
-					const
-			{
-				return true;
-			}
+			BOOL FBoolean(CMDAccessor *pmda) const;
 
 #ifdef GPOS_DEBUG
 			// checks whether the operator has valid structure, i.e. number and
@@ -91,16 +64,7 @@ namespace gpdxl
 
 			// conversion function
 			static
-			CDXLScalarPartListNullTest *PdxlopConvert
-				(
-				CDXLOperator *pdxlop
-				)
-			{
-				GPOS_ASSERT(NULL != pdxlop);
-				GPOS_ASSERT(EdxlopScalarPartListNullTest == pdxlop->Edxlop());
-
-				return dynamic_cast<CDXLScalarPartListNullTest*>(pdxlop);
-			}
+			CDXLScalarPartListNullTest *PdxlopConvert(CDXLOperator *pdxlop);
 	};
 }
 

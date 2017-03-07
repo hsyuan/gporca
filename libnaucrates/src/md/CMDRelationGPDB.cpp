@@ -443,23 +443,16 @@ CMDRelationGPDB::UlPartColumns() const
 	return m_pdrgpulPartColumns->UlSafeLength();
 }
 
-// retrieve list of partition types
+// Retrieve list of partition types
 DrgPsz *
 CMDRelationGPDB::PdrgpszPartTypes() const
 {
 	return m_pdrgpszPartTypes;
 }
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CMDRelationGPDB::szPartType
-//
-//	@doc:
-//		Returns the partition type of the given level
-//
-//---------------------------------------------------------------------------
+// Returns the partition type of the given level
 CHAR
-CMDRelationGPDB::szPartType(ULONG ulLevel) const
+CMDRelationGPDB::SzPartType(ULONG ulLevel) const
 {
 	return *(*m_pdrgpszPartTypes)[ulLevel];
 }

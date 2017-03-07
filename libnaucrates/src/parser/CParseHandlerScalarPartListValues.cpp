@@ -2,12 +2,8 @@
 //	Greenplum Database
 //	Copyright (C) 2017 Pivotal, Inc.
 //
-//	@filename:
-//		CParseHandlerScalarPartListValues.cpp
-//
-//	@doc:
-//		Implementation of the SAX parse handler class for parsing part list
-//		values
+//	Implementation of the SAX parse handler class for parsing part list
+//	values
 //---------------------------------------------------------------------------
 
 #include "naucrates/dxl/parser/CParseHandlerScalarPartListValues.h"
@@ -22,14 +18,7 @@ using namespace gpdxl;
 
 XERCES_CPP_NAMESPACE_USE
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CParseHandlerScalarPartListValues::CParseHandlerScalarPartListValues
-//
-//	@doc:
-//		Ctor
-//
-//---------------------------------------------------------------------------
+// Ctor
 CParseHandlerScalarPartListValues::CParseHandlerScalarPartListValues
 	(
 	IMemoryPool *pmp,
@@ -41,14 +30,7 @@ CParseHandlerScalarPartListValues::CParseHandlerScalarPartListValues
 {
 }
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CParseHandlerScalarPartListValues::StartElement
-//
-//	@doc:
-//		Invoked by Xerces to process an opening tag
-//
-//---------------------------------------------------------------------------
+// Invoked by Xerces to process an opening tag
 void
 CParseHandlerScalarPartListValues::StartElement
 	(
@@ -69,14 +51,7 @@ CParseHandlerScalarPartListValues::StartElement
 	m_pdxln = GPOS_NEW(m_pmp) CDXLNode (m_pmp, GPOS_NEW(m_pmp) CDXLScalarPartListValues(m_pmp, ulLevel, pmdidType));
 }
 
-//---------------------------------------------------------------------------
-//	@function:
-//		CParseHandlerScalarPartListValues::EndElement
-//
-//	@doc:
-//		Invoked by Xerces to process a closing tag
-//
-//---------------------------------------------------------------------------
+// Invoked by Xerces to process a closing tag
 void
 CParseHandlerScalarPartListValues::EndElement
 	(
