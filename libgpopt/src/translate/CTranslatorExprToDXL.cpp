@@ -5047,13 +5047,24 @@ CTranslatorExprToDXL::PdxlnScCmpPartKey
 
 		// If the pexprOther is not comparable with pexprPartKey, but can be casted to pexprPartKey,
 		// and not yet casted, then we add a cast on top of pexprOther.
-		if (!CMDAccessorUtils::FCmpExists(m_pmda, pmdidTypeOther, pmdidTypePartKey, ecmpt)
-			&& CMDAccessorUtils::FCastExists(m_pmda, pmdidTypeOther, pmdidTypePartKey)
-			&& COperator::EopScalarCast != pexprOther->Pop()->Eopid())
+		if (!CMDAccessorUtils::FCmpExists(m_pmda, pmdidTypeOther, pmdidTypePartKey, ecmpt))
 		{
-			CExpression *pexprNewOther = CUtils::PexprCast(m_pmp, m_pmda, pexprOther, pmdidTypePartKey);
-			pexprOther->Release();
-			CTranslatorExprToDXLUtils::ExtractCastMdids(pexprNewOther->Pop(), &pmdidTypeCastExpr, &pmdidCastFunc);
+			if (CMDAccessorUtils::FCastExists(m_pmda, pmdidTypeOther, pmdidTypePartKey)
+				&& CMDAccessorUtils::FCmpExists(m_pmda, pmdidTypePartKey, pmdidTypePartKey, ecmpt))
+			{
+				if (COperator::EopScalarCast != pexprOther->Pop()->Eopid())
+				{
+					CExpression *pexprNewOther = CUtils::PexprCast(m_pmp, m_pmda, pexprOther, pmdidTypePartKey);
+					pexprOther->Release();
+					CTranslatorExprToDXLUtils::ExtractCastMdids(pexprNewOther->Pop(), &pmdidTypeCastExpr, &pmdidCastFunc);
+				}
+			}
+			else
+			{
+				CWStringDynamic *pstr = GPOS_NEW(m_pmp) CWStringDynamic(m_pmp);
+				pstr->AppendFormat(GPOS_WSZ_LIT("Cannot generate metadata id for scaler comparison operator between %ls and %ls"), pmdidTypeOther->Wsz(), pmdidTypePartKey->Wsz());
+				GPOS_RAISE(gpopt::ExmaGPOPT, gpopt::ExmiUnexpectedOp, pstr->Wsz());
+			}
 		}
 
 		return CTranslatorExprToDXLUtils::PdxlnListFilterScCmp
