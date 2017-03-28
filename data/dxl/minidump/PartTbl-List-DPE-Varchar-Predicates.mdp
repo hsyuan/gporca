@@ -499,8 +499,10 @@ select * from pt where gender is null;
               <dxl:PartFilters>
                 <dxl:Or>
                   <dxl:ArrayComp OperatorName="&gt;=" OperatorMdid="0.667.1.0" OperatorType="Any">
-                    <dxl:ConstValue TypeMdid="0.25.1.0" IsNull="false" IsByValue="false" Value="AAAABU0=" LintValue="160801324"/>
-                    <dxl:PartListValues Level="0" Type="0.25.1.0"/>
+                    <dxl:Cast TypeMdid="0.1043.1.0" FuncId="0.0.0.0">
+                      <dxl:ConstValue TypeMdid="0.25.1.0" IsNull="false" IsByValue="false" Value="AAAABU0=" LintValue="160801324"/>
+                    </dxl:Cast>
+                    <dxl:PartListValues Level="0" Type="0.1043.1.0"/>
                   </dxl:ArrayComp>
                   <dxl:DefaultPart Level="0"/>
                 </dxl:Or>
@@ -583,19 +585,23 @@ select * from pt where gender is null;
                 <dxl:Or>
                   <dxl:Or>
                     <dxl:ArrayComp OperatorName="=" OperatorMdid="0.98.1.0" OperatorType="Any">
-                      <dxl:Cast TypeMdid="0.25.1.0" FuncId="0.0.0.0">
-                        <dxl:ConstValue TypeMdid="0.1043.1.0" IsNull="false" IsByValue="false" Value="AAAABUY=" LintValue="160743980"/>
+                      <dxl:Cast TypeMdid="0.1043.1.0" FuncId="0.0.0.0">
+                        <dxl:Cast TypeMdid="0.25.1.0" FuncId="0.0.0.0">
+                          <dxl:ConstValue TypeMdid="0.1043.1.0" IsNull="false" IsByValue="false" Value="AAAABUY=" LintValue="160743980"/>
+                        </dxl:Cast>
                       </dxl:Cast>
-                      <dxl:PartListValues Level="0" Type="0.25.1.0"/>
+                      <dxl:PartListValues Level="0" Type="0.1043.1.0"/>
                     </dxl:ArrayComp>
                     <dxl:DefaultPart Level="0"/>
                   </dxl:Or>
                   <dxl:Or>
                     <dxl:ArrayComp OperatorName="=" OperatorMdid="0.98.1.0" OperatorType="Any">
-                      <dxl:Cast TypeMdid="0.25.1.0" FuncId="0.0.0.0">
-                        <dxl:ConstValue TypeMdid="0.1043.1.0" IsNull="false" IsByValue="false" Value="AAAABkZN" LintValue="689808164"/>
+                      <dxl:Cast TypeMdid="0.1043.1.0" FuncId="0.0.0.0">
+                        <dxl:Cast TypeMdid="0.25.1.0" FuncId="0.0.0.0">
+                          <dxl:ConstValue TypeMdid="0.1043.1.0" IsNull="false" IsByValue="false" Value="AAAABkZN" LintValue="689808164"/>
+                        </dxl:Cast>
                       </dxl:Cast>
-                      <dxl:PartListValues Level="0" Type="0.25.1.0"/>
+                      <dxl:PartListValues Level="0" Type="0.1043.1.0"/>
                     </dxl:ArrayComp>
                     <dxl:DefaultPart Level="0"/>
                   </dxl:Or>

@@ -108,6 +108,7 @@
         <dxl:CountAgg Mdid="0.2147.1.0"/>
       </dxl:Type>
       <dxl:MDCast Mdid="3.1043.1.0;25.1.0" Name="text" BinaryCoercible="true" SourceTypeId="0.1043.1.0" DestinationTypeId="0.25.1.0" CastFuncId="0.0.0.0"/>
+      <dxl:MDCast Mdid="3.25.1.0;1043.1.0" Name="varchar" BinaryCoercible="true" SourceTypeId="0.25.1.0" DestinationTypeId="0.1043.1.0" CastFuncId="0.0.0.0"/>
       <dxl:GPDBFunc Mdid="0.6086.1.0" Name="gp_partition_inverse" ReturnsSet="true" Stability="Stable" DataAccess="NoSQL" IsStrict="true">
         <dxl:ResultType Mdid="0.2249.1.0"/>
       </dxl:GPDBFunc>
@@ -375,15 +376,19 @@
           <dxl:And>
             <dxl:Or>
               <dxl:ArrayComp OperatorName="&gt;" OperatorMdid="0.666.1.0" OperatorType="Any">
-                <dxl:ConstValue TypeMdid="0.25.1.0" IsNull="false" IsByValue="false" Value="AAAACjIwMDgwMg==" LintValue="249971508"/>
-                <dxl:PartListValues Level="0" Type="0.25.1.0"/>
+                <dxl:Cast TypeMdid="0.1043.1.0" FuncId="0.0.0.0">
+                  <dxl:ConstValue TypeMdid="0.25.1.0" IsNull="false" IsByValue="false" Value="AAAACjIwMDgwMg==" LintValue="249971508"/>
+                </dxl:Cast>
+                <dxl:PartListValues Level="0" Type="0.1043.1.0"/>
               </dxl:ArrayComp>
               <dxl:DefaultPart Level="0"/>
             </dxl:Or>
             <dxl:Or>
               <dxl:ArrayComp OperatorName="&lt;=" OperatorMdid="0.665.1.0" OperatorType="Any">
-                <dxl:ConstValue TypeMdid="0.25.1.0" IsNull="false" IsByValue="false" Value="AAAACjIwMDgwMA==" LintValue="249955124"/>
-                <dxl:PartListValues Level="0" Type="0.25.1.0"/>
+                <dxl:Cast TypeMdid="0.1043.1.0" FuncId="0.0.0.0">
+                  <dxl:ConstValue TypeMdid="0.25.1.0" IsNull="false" IsByValue="false" Value="AAAACjIwMDgwMA==" LintValue="249955124"/>
+                </dxl:Cast>
+                <dxl:PartListValues Level="0" Type="0.1043.1.0"/>
               </dxl:ArrayComp>
               <dxl:DefaultPart Level="0"/>
             </dxl:Or>

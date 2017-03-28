@@ -1981,7 +1981,7 @@ CDXLUtils::PstrSerializeSz
 	const DrgPsz *pdrgsz
 	)
 {
-	CAutoP<CWStringDynamic> a_pstr(GPOS_NEW(pmp) CWStringDynamic(pmp));
+	CWStringDynamic *pstr = GPOS_NEW(pmp) CWStringDynamic(pmp);
 
 	ULONG ulLength = pdrgsz->UlLength();
 	for (ULONG ul = 0; ul < ulLength; ul++)
@@ -1990,15 +1990,15 @@ CDXLUtils::PstrSerializeSz
 		if (ul == ulLength - 1)
 		{
 			// last element: do not print a comma
-			a_pstr->AppendFormat(GPOS_WSZ_LIT("%c"), tValue);
+			pstr->AppendFormat(GPOS_WSZ_LIT("%c"), tValue);
 		}
 		else
 		{
-			a_pstr->AppendFormat(GPOS_WSZ_LIT("%c%ls"), tValue, CDXLTokens::PstrToken(EdxltokenComma)->Wsz());
+			pstr->AppendFormat(GPOS_WSZ_LIT("%c%ls"), tValue, CDXLTokens::PstrToken(EdxltokenComma)->Wsz());
 		}
 	}
 
-	return a_pstr.PtReset();
+	return pstr;
 }
 
 //---------------------------------------------------------------------------

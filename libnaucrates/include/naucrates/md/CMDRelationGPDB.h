@@ -134,7 +134,7 @@ namespace gpmd
 				DrgPmdcol *pdrgpmdcol,
 				DrgPul *pdrgpulDistrColumns,
 				DrgPul *pdrgpulPartColumns,
-				DrgPsz *m_pdrgpszPartTypes,
+				DrgPsz *pdrgpszPartTypes,
 				ULONG ulPartitions,
 				BOOL fConvertHashToRandom,
 				DrgPdrgPul *pdrgpdrgpul,
