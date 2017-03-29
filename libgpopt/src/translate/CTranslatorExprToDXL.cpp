@@ -19,6 +19,7 @@
 #include "gpos/common/CAutoTimer.h"
 #include "gpos/common/CHashMap.h"
 
+#include "naucrates/md/IMDCast.h"
 #include "naucrates/md/IMDScalarOp.h"
 #include "naucrates/md/IMDFunction.h"
 #include "naucrates/md/IMDTypeInt4.h"
@@ -5048,10 +5049,9 @@ CTranslatorExprToDXL::PdxlnScCmpPartKey
 			if (CMDAccessorUtils::FCastExists(m_pmda, pmdidTypeOther, pmdidTypePartKey)
 				&& CMDAccessorUtils::FCmpExists(m_pmda, pmdidTypePartKey, pmdidTypePartKey, ecmpt))
 			{
-				pexprOther->AddRef();
-				CExpression *pexprNewOther = CUtils::PexprCast(m_pmp, m_pmda, pexprOther, pmdidTypePartKey);
-				CTranslatorExprToDXLUtils::ExtractCastMdids(pexprNewOther->Pop(), &pmdidTypeCastExpr, &pmdidCastFunc);
-				pexprNewOther->Release();
+				const IMDCast *pmdcast = m_pmda->Pmdcast(pmdidTypeOther, pmdidTypePartKey);
+				pmdidTypeCastExpr = pmdcast->PmdidDest();
+				pmdidCastFunc = pmdcast->PmdidCastFunc();
 			}
 			else
 			{
