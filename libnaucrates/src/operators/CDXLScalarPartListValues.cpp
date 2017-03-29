@@ -21,21 +21,25 @@ CDXLScalarPartListValues::CDXLScalarPartListValues
 	(
 	IMemoryPool *pmp,
 	ULONG ulLevel,
-	IMDId *pmdidType
+	IMDId *pmdidResult,
+	IMDId *pmdidElement
 	)
 	:
 	CDXLScalar(pmp),
 	m_ulLevel(ulLevel),
-	m_pmdidType(pmdidType)
+	m_pmdidResult(pmdidResult),
+	m_pmdidElement(pmdidElement)
 {
-	GPOS_ASSERT(pmdidType->FValid());
+	GPOS_ASSERT(pmdidResult->FValid());
+	GPOS_ASSERT(pmdidElement->FValid());
 }
 
 
 // Dtor
 CDXLScalarPartListValues::~CDXLScalarPartListValues()
 {
-	m_pmdidType->Release();
+	m_pmdidResult->Release();
+	m_pmdidElement->Release();
 }
 
 // Operator type
@@ -59,11 +63,18 @@ CDXLScalarPartListValues::UlLevel() const
 	return m_ulLevel;
 }
 
+// result type
+IMDId *
+CDXLScalarPartListValues::PmdidResult() const
+{
+	return m_pmdidResult;
+}
+
 // element type
 IMDId *
-CDXLScalarPartListValues::PmdidType() const
+CDXLScalarPartListValues::PmdidElement() const
 {
-	return m_pmdidType;
+	return m_pmdidElement;
 }
 
 // does the operator return a boolean result
@@ -90,7 +101,8 @@ CDXLScalarPartListValues::SerializeToDXL
 
 	pxmlser->OpenElement(CDXLTokens::PstrToken(EdxltokenNamespacePrefix), pstrElemName);
 	pxmlser->AddAttribute(CDXLTokens::PstrToken(EdxltokenPartLevel), m_ulLevel);
-	m_pmdidType->Serialize(pxmlser, CDXLTokens::PstrToken(EdxltokenMDType));
+	m_pmdidResult->Serialize(pxmlser, CDXLTokens::PstrToken(EdxltokenGPDBScalarOpResultTypeId));
+	m_pmdidElement->Serialize(pxmlser, CDXLTokens::PstrToken(EdxltokenArrayElementType));
 	pxmlser->CloseElement(CDXLTokens::PstrToken(EdxltokenNamespacePrefix), pstrElemName);
 }
 

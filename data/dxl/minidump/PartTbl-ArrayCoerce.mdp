@@ -304,7 +304,7 @@ select * from pt where gender in ( 'F', 'FM');
                         <dxl:ConstValue TypeMdid="0.1043.1.0" IsNull="false" IsByValue="false" Value="AAAABUY=" LintValue="160743980"/>
                       </dxl:Cast>
                     </dxl:Cast>
-                    <dxl:PartListValues Level="0" Type="0.1043.1.0"/>
+                    <dxl:PartListValues Level="0" ResultType="0.1015.1.0" ElementType="0.1043.1.0"/>
                   </dxl:ArrayComp>
                   <dxl:DefaultPart Level="0"/>
                 </dxl:Or>
@@ -315,7 +315,7 @@ select * from pt where gender in ( 'F', 'FM');
                         <dxl:ConstValue TypeMdid="0.1043.1.0" IsNull="false" IsByValue="false" Value="AAAABkZN" LintValue="689808164"/>
                       </dxl:Cast>
                     </dxl:Cast>
-                    <dxl:PartListValues Level="0" Type="0.1043.1.0"/>
+                    <dxl:PartListValues Level="0" ResultType="0.1015.1.0" ElementType="0.1043.1.0"/>
                   </dxl:ArrayComp>
                   <dxl:DefaultPart Level="0"/>
                 </dxl:Or>

@@ -379,7 +379,7 @@
                 <dxl:Cast TypeMdid="0.1043.1.0" FuncId="0.0.0.0">
                   <dxl:ConstValue TypeMdid="0.25.1.0" IsNull="false" IsByValue="false" Value="AAAACjIwMDgwMg==" LintValue="249971508"/>
                 </dxl:Cast>
-                <dxl:PartListValues Level="0" Type="0.1043.1.0"/>
+                <dxl:PartListValues Level="0" ResultType="0.1015.1.0" ElementType="0.1043.1.0"/>
               </dxl:ArrayComp>
               <dxl:DefaultPart Level="0"/>
             </dxl:Or>
@@ -388,7 +388,7 @@
                 <dxl:Cast TypeMdid="0.1043.1.0" FuncId="0.0.0.0">
                   <dxl:ConstValue TypeMdid="0.25.1.0" IsNull="false" IsByValue="false" Value="AAAACjIwMDgwMA==" LintValue="249955124"/>
                 </dxl:Cast>
-                <dxl:PartListValues Level="0" Type="0.1043.1.0"/>
+                <dxl:PartListValues Level="0" ResultType="0.1015.1.0" ElementType="0.1043.1.0"/>
               </dxl:ArrayComp>
               <dxl:DefaultPart Level="0"/>
             </dxl:Or>

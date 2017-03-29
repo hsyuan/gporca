@@ -21,15 +21,18 @@ namespace gpdxl
 			// partitioning level
 			ULONG m_ulLevel;
 
+			// result type
+			IMDId *m_pmdidResult;
+
 			// element type
-			IMDId *m_pmdidType;
+			IMDId *m_pmdidElement;
 
 			// private copy ctor
 			CDXLScalarPartListValues(const CDXLScalarPartListValues&);
 
 		public:
 			// ctor
-			CDXLScalarPartListValues(IMemoryPool *pmp, ULONG ulLevel, IMDId *pmdidType);
+			CDXLScalarPartListValues(IMemoryPool *pmp, ULONG ulLevel, IMDId *pmdidResult, IMDId *pmdidElement);
 
 			// dtor
 			virtual
@@ -46,8 +49,11 @@ namespace gpdxl
 			// partitioning level
 			ULONG UlLevel() const;
 
+			// result type
+			IMDId *PmdidResult() const;
+
 			// element type
-			IMDId *PmdidType() const;
+			IMDId *PmdidElement() const;
 
 			// serialize operator in DXL format
 			virtual

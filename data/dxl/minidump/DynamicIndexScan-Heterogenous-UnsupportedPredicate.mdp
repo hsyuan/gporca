@@ -778,14 +778,14 @@
             <dxl:Or>
               <dxl:ArrayComp OperatorName="&gt;" OperatorMdid="0.521.1.0" OperatorType="Any">
                 <dxl:ConstValue TypeMdid="0.23.1.0" IsNull="false" IsByValue="true" Value="50"/>
-                <dxl:PartListValues Level="0" Type="0.23.1.0"/>
+                <dxl:PartListValues Level="0" ResultType="0.1007.1.0" ElementType="0.23.1.0"/>
               </dxl:ArrayComp>
               <dxl:DefaultPart Level="0"/>
             </dxl:Or>
             <dxl:Or>
               <dxl:ArrayComp OperatorName="&lt;" OperatorMdid="0.97.1.0" OperatorType="Any">
                 <dxl:ConstValue TypeMdid="0.23.1.0" IsNull="false" IsByValue="true" Value="50"/>
-                <dxl:PartListValues Level="0" Type="0.23.1.0"/>
+                <dxl:PartListValues Level="0" ResultType="0.1007.1.0" ElementType="0.23.1.0"/>
               </dxl:ArrayComp>
               <dxl:DefaultPart Level="0"/>
             </dxl:Or>

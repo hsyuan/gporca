@@ -47,8 +47,9 @@ CParseHandlerScalarPartListValues::StartElement
 	}
 
 	ULONG ulLevel = CDXLOperatorFactory::UlValueFromAttrs(m_pphm->Pmm(), attrs, EdxltokenPartLevel, EdxltokenScalarPartListValues);
-	IMDId *pmdidType = CDXLOperatorFactory::PmdidFromAttrs(m_pphm->Pmm(), attrs, EdxltokenMDType, EdxltokenScalarPartListValues);
-	m_pdxln = GPOS_NEW(m_pmp) CDXLNode (m_pmp, GPOS_NEW(m_pmp) CDXLScalarPartListValues(m_pmp, ulLevel, pmdidType));
+	IMDId *pmdidResult = CDXLOperatorFactory::PmdidFromAttrs(m_pphm->Pmm(), attrs, EdxltokenGPDBScalarOpResultTypeId, EdxltokenScalarPartListValues);
+	IMDId *pmdidElement = CDXLOperatorFactory::PmdidFromAttrs(m_pphm->Pmm(), attrs, EdxltokenArrayElementType, EdxltokenScalarPartListValues);
+	m_pdxln = GPOS_NEW(m_pmp) CDXLNode (m_pmp, GPOS_NEW(m_pmp) CDXLScalarPartListValues(m_pmp, ulLevel, pmdidResult, pmdidElement));
 }
 
 // Invoked by Xerces to process a closing tag

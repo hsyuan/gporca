@@ -594,9 +594,12 @@ CTranslatorExprToDXLUtils::PdxlnPartialScanTestRange
 		CDXLDatum *pdxldatum = Pdxldatum(pmp, pmda, pdatum);
 		CDXLNode *pdxlnScalar = GPOS_NEW(pmp) CDXLNode(pmp, GPOS_NEW(pmp) CDXLScalarConstValue(pmp, pdxldatum));
 		// TODO: what if part key type is varchar, the value type is text?
-		pmdidPartKeyType->AddRef();
-		CDXLNode *pdxlnPartList = GPOS_NEW(pmp) CDXLNode(pmp, GPOS_NEW(pmp) CDXLScalarPartListValues(pmp, ulPartLevel, pmdidPartKeyType));
 		const IMDType *pmdtype = pmda->Pmdtype(pmdidPartKeyType);
+		IMDId *pmdidResult = pmdtype->PmdidTypeArray();
+		pmdidResult->AddRef();
+		pmdidPartKeyType->AddRef();
+		CDXLNode *pdxlnPartList = GPOS_NEW(pmp) CDXLNode(pmp, GPOS_NEW(pmp) CDXLScalarPartListValues(pmp, ulPartLevel, pmdidResult, pmdidPartKeyType));
+
 		IMDId *pmdidEq = pmdtype->PmdidCmp(IMDType::EcmptEq);
 		pmdidEq->AddRef();
 		CDXLNode *pdxlnScCmp = GPOS_NEW(pmp) CDXLNode
@@ -795,9 +798,11 @@ CTranslatorExprToDXLUtils::PdxlnListFilterScCmp
 
 	const IMDScalarOp *pmdscop = pmda->Pmdscop(pmdidScCmp);
 	const CWStringConst *pstrScCmp = pmdscop->Mdname().Pstr();
-
+	const IMDType *pmdtype = pmda->Pmdtype(pmdidTypePartKey);
+	IMDId *pmdidResult = pmdtype->PmdidTypeArray();
+	pmdidResult->AddRef();
 	pmdidTypePartKey->AddRef();
-	CDXLNode *pdxlnPartList = GPOS_NEW(pmp) CDXLNode(pmp, GPOS_NEW(pmp) CDXLScalarPartListValues(pmp, ulPartLevel, pmdidTypePartKey));
+	CDXLNode *pdxlnPartList = GPOS_NEW(pmp) CDXLNode(pmp, GPOS_NEW(pmp) CDXLScalarPartListValues(pmp, ulPartLevel, pmdidResult, pmdidTypePartKey));
 
 	if (IMDId::FValid(pmdidTypeCastExpr))
 	{
