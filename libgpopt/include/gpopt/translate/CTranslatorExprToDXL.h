@@ -443,8 +443,8 @@ namespace gpopt
 				CDXLNode **ppdxlnResidual
 				);
 
-			// construct the level filter lists for a range-based partition selector
-			void ConstructLevelFiltersPartitionSelectorRange(CExpression *pexprPartSelector, CDXLNode **ppdxlnEqFilters, CDXLNode **ppdxlnFilters);
+			// construct the level filter lists for partition selector
+			void ConstructLevelFilters4PartitionSelector(CExpression *pexprPartSelector, CDXLNode **ppdxlnEqFilters, CDXLNode **ppdxlnFilters);
 
 			// translate a general predicate on a part key and update the various
 			// comparison type flags accordingly

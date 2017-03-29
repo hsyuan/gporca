@@ -4651,7 +4651,7 @@ CTranslatorExprToDXL::TranslatePartitionFilters
 		return;
 	}
 
-	ConstructLevelFiltersPartitionSelectorRange(pexprPartSelector, ppdxlnEqFilters, ppdxlnFilters);
+	ConstructLevelFilters4PartitionSelector(pexprPartSelector, ppdxlnEqFilters, ppdxlnFilters);
 
 	// TODO:  - Apr 11, 2014; translate the residual filter. Take into account
 	// that this might be an arbitrary scalar expression on multiple part keys. Right
@@ -4661,14 +4661,14 @@ CTranslatorExprToDXL::TranslatePartitionFilters
 
 //---------------------------------------------------------------------------
 //	@function:
-//		CTranslatorExprToDXL::ConstructLevelFiltersPartitionSelectorRange
+//		CTranslatorExprToDXL::ConstructLevelFilters4PartitionSelector
 //
 //	@doc:
-// 		Construct the level filter lists for a range-based partition selector
+// 		Construct the level filter lists for partition selector
 //
 //---------------------------------------------------------------------------
 void
-CTranslatorExprToDXL::ConstructLevelFiltersPartitionSelectorRange
+CTranslatorExprToDXL::ConstructLevelFilters4PartitionSelector
 	(
 	CExpression *pexprPartSelector,
 	CDXLNode **ppdxlnEqFilters,
