@@ -26,6 +26,9 @@ namespace gpopt
 			static BOOL
 			FTransformQuantified(IMemoryPool *pmp, CExpression *pexprScalar, CExpression **ppexprNewScalar);
 
+			static BOOL
+			FTransformExistential(IMemoryPool *pmp, CExpression *pexprScalar, CExpression **ppexprNewScalar);
+
 			// private copy ctor
 			CXformRemoveSubqDistinct(const CXformRemoveSubqDistinct &);
 
@@ -33,7 +36,7 @@ namespace gpopt
 
 			// ctor
 			explicit
-			CXformRemoveSubqDistinct(CExpression *pexprPattern);
+			CXformRemoveSubqDistinct(IMemoryPool *pmp);
 
 			// dtor
 			virtual
@@ -54,16 +57,12 @@ namespace gpopt
 				return "CXformRemoveSubqDistinct";
 			}
 
-			virtual
-			void ssmaping(const SSimplifySubqueryMapping **mapping, ULONG &size) const;
-
 			// compute xform promise for a given expression handle
 			virtual
 			EXformPromise Exfp (CExpressionHandle &exprhdl) const;
 
-			// actual transform
 			virtual
-			void Transform(CXformContext *, CXformResult *, CExpression *) const;
+			void ssmaping(const SSimplifySubqueryMapping **mapping, ULONG &size) const;
 
 	}; // class CXformRemoveSubqDistinct
 
