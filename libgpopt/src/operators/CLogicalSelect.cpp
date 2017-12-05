@@ -109,6 +109,7 @@ CLogicalSelect::PxfsCandidates
 	(void) pxfs->FExchangeSet(CXform::ExfSelect2DynamicBitmapBoolOp);
 	(void) pxfs->FExchangeSet(CXform::ExfSimplifySelectWithSubquery);
 	(void) pxfs->FExchangeSet(CXform::ExfSelect2Filter);
+	(void) pxfs->FExchangeSet(CXform::ExfRemoveSubqDistinct);
 
 	return pxfs;
 }

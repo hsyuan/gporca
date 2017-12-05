@@ -226,6 +226,12 @@ CXformSimplifySubquery::FSimplify
 	return fSuccess;
 }
 
+void
+CXformSimplifySubquery::ssmaping(const SSimplifySubqueryMapping **maping, ULONG &size) const
+{
+	*maping = CXformSimplifySubquery::m_rgssm;
+	size = GPOS_ARRAY_SIZE(CXformSimplifySubquery::m_rgssm);
+}
 
 //---------------------------------------------------------------------------
 //	@function:
@@ -251,14 +257,17 @@ CXformSimplifySubquery::Transform
 
 	IMemoryPool *pmp = pxfctxt->Pmp();
 	CExpression *pexprInput = pexpr;
-	const ULONG ulSize = GPOS_ARRAY_SIZE(m_rgssm);
+	const CXformSimplifySubquery::SSimplifySubqueryMapping *rgssm;
+	ULONG ulSize;
+	ssmaping(&rgssm, ulSize);
+
 	for (ULONG ul = 0; ul < ulSize; ul++)
 	{
 		CExpression *pexprOuter = (*pexprInput)[0];
 		CExpression *pexprScalar = (*pexprInput)[1];
 		CExpression *pexprNewScalar = NULL;
 
-		if (!FSimplify(pmp, pexprScalar, &pexprNewScalar, m_rgssm[ul].m_pfnsimplify, m_rgssm[ul].m_pfnmatch))
+		if (!FSimplify(pmp, pexprScalar, &pexprNewScalar, rgssm[ul].m_pfnsimplify, rgssm[ul].m_pfnmatch))
 		{
 			CRefCount::SafeRelease(pexprNewScalar);
 			continue;

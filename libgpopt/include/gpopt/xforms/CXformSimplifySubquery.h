@@ -30,8 +30,7 @@ namespace gpopt
 	//---------------------------------------------------------------------------
 	class CXformSimplifySubquery : public CXformExploration
 	{
-
-		private:
+		protected:
 
 			// definition of simplification function
 			typedef BOOL(FnSimplify) (IMemoryPool *pmp, CExpression *, CExpression **);
@@ -56,6 +55,11 @@ namespace gpopt
 				FnMatch *m_pfnmatch;
 
 			}; // struct SSimplifySubqueryMapping
+
+			virtual
+			void ssmaping(const SSimplifySubqueryMapping **mapping, ULONG &size) const;
+
+		private:
 
 			// array of mappings
 			static
