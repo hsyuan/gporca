@@ -59,6 +59,38 @@ CXformRemoveSubqDistinct::Exfp
 	return CXform::ExfpNone;
 }
 
+// For quantified subqueries (IN / NOT IN), the following transformation will be applied:
+// CLogicalSelect
+// |--CLogicalGet "foo"
+// +--CScalarSubqueryAny(=)["c" (9)]
+//    |--CLogicalGbAgg( Global ) Grp Cols: ["c" (9)]
+//    |  |--CLogicalGet "bar"
+//    |  +--CScalarProjectList
+//    +--CScalarIdent "a" (0)
+//
+// will become
+//
+// CLogicalSelect
+// |--CLogicalGet "foo"
+// +--CScalarSubqueryAny(=)["c" (9)]
+//    |--CLogicalGet "bar"
+//    +--CScalarIdent "a" (0)
+//
+// For existential subqueries (EXISTS / NOT EXISTS), the following transformation will be applied:
+// CLogicalSelect
+// |--CLogicalGet "foo"
+// +--CScalarSubqueryExists
+//    +--CLogicalGbAgg( Global ) Grp Cols: ["c" (9)]
+//       |--CLogicalGet "bar"
+//       +--CScalarProjectList
+//
+// will become
+//
+// CLogicalSelect
+// |--CLogicalGet "foo"
+// +--CScalarSubqueryExists
+//    +--CLogicalGet "bar"
+//
 void
 CXformRemoveSubqDistinct::Transform
 	(
@@ -74,12 +106,13 @@ CXformRemoveSubqDistinct::Transform
 	GPOS_ASSERT(FCheckPattern(pexpr));
 
 	IMemoryPool *pmp = pxfctxt->Pmp();
-	CExpression *pexprScalar = (*pexpr)[1]; // scalar subquery expression
+	CExpression *pexprScalar = (*pexpr)[1];
 	CExpression *pexprGbAgg = (*pexprScalar)[0];
 
 	if (COperator::EopLogicalGbAgg == pexprGbAgg->Pop()->Eopid())
 	{
 		CExpression *pexprGbAggProjectList = (*pexprGbAgg)[1];
+		// only consider removing distinct when there is no aggregation functions
 		if (0 == pexprGbAggProjectList->UlArity())
 		{
 			CExpression *pexprNewScalar = NULL;
