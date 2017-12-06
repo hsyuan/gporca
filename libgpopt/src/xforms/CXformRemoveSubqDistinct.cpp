@@ -24,7 +24,7 @@ CXformRemoveSubqDistinct::CXformRemoveSubqDistinct
 	)
 	:
 	// pattern
-	CXformSimplifySubquery
+	CXformExploration
 	(
 	GPOS_NEW(pmp) CExpression
 			(
@@ -59,81 +59,56 @@ CXformRemoveSubqDistinct::Exfp
 	return CXform::ExfpNone;
 }
 
-BOOL
-CXformRemoveSubqDistinct::FTransformQuantified
-	(
-	IMemoryPool *pmp,
-	CExpression *pexprScalar,
-	CExpression **ppexprNewScalar
-	)
-{
-	CExpression *pexprGbAgg = (*pexprScalar)[0];
-	if (COperator::EopLogicalGbAgg == pexprGbAgg->Pop()->Eopid())
-	{
-		CExpression *pexprGbAggProjectList = (*pexprGbAgg)[1];
-		if (0 == pexprGbAggProjectList->UlArity())
-		{
-			COperator *pop = pexprScalar->Pop();
-			pop->AddRef();
-
-			CExpression *pexprRelChild = (*pexprGbAgg)[0];
-			pexprRelChild->AddRef();
-
-			CExpression *pexprScalarIdent = (*pexprScalar)[1];
-			pexprScalarIdent->AddRef();
-
-			*ppexprNewScalar = GPOS_NEW(pmp) CExpression(pmp, pop, pexprRelChild, pexprScalarIdent);
-			return true;
-		}
-	}
-
-	return false;
-}
-
-BOOL
-CXformRemoveSubqDistinct::FTransformExistential
-	(
-	IMemoryPool *pmp,
-	CExpression *pexprScalar,
-	CExpression **ppexprNewScalar
-	)
-{
-	CExpression *pexprGbAgg = (*pexprScalar)[0];
-	if (COperator::EopLogicalGbAgg == pexprGbAgg->Pop()->Eopid())
-	{
-		CExpression *pexprGbAggProjectList = (*pexprGbAgg)[1];
-		if (0 == pexprGbAggProjectList->UlArity())
-		{
-			COperator *pop = pexprScalar->Pop();
-			pop->AddRef();
-
-			CExpression *pexprRelChild = (*pexprGbAgg)[0];
-			pexprRelChild->AddRef();
-
-			*ppexprNewScalar = GPOS_NEW(pmp) CExpression(pmp, pop, pexprRelChild);
-			return true;
-		}
-	}
-
-	return false;
-}
-
 void
-CXformRemoveSubqDistinct::ssmaping
+CXformRemoveSubqDistinct::Transform
 	(
-	const SSimplifySubqueryMapping **mapping,
-	ULONG &size
+	CXformContext *pxfctxt,
+	CXformResult *pxfres,
+	CExpression *pexpr
 	)
 	const
 {
-	// initialization of simplify function mappings
-	const SSimplifySubqueryMapping rgssm[] =
+	GPOS_ASSERT(NULL != pxfctxt);
+	GPOS_ASSERT(NULL != pxfres);
+	GPOS_ASSERT(FPromising(pxfctxt->Pmp(), this, pexpr));
+	GPOS_ASSERT(FCheckPattern(pexpr));
+
+	IMemoryPool *pmp = pxfctxt->Pmp();
+	CExpression *pexprScalar = (*pexpr)[1]; // scalar subquery expression
+	CExpression *pexprGbAgg = (*pexprScalar)[0];
+
+	if (COperator::EopLogicalGbAgg == pexprGbAgg->Pop()->Eopid())
 	{
-		{FTransformQuantified, CUtils::FQuantifiedSubquery},
-		{FTransformExistential, CUtils::FExistentialSubquery}
-	};
-	*mapping = rgssm;
-	size = GPOS_ARRAY_SIZE(rgssm);
+		CExpression *pexprGbAggProjectList = (*pexprGbAgg)[1];
+		if (0 == pexprGbAggProjectList->UlArity())
+		{
+			CExpression *pexprNewScalar = NULL;
+			CExpression *pexprRelChild = (*pexprGbAgg)[0];
+			pexprRelChild->AddRef();
+
+			COperator *pop = pexprScalar->Pop();
+			pop->AddRef();
+			if (CUtils::FExistentialSubquery(pop))
+			{
+				// EXIST/NOT EXIST scalar subquery
+				pexprNewScalar = GPOS_NEW(pmp) CExpression(pmp, pop, pexprRelChild);
+			}
+			else
+			{
+				// IN/NOT IN scalar subquery
+				CExpression *pexprScalarIdent = (*pexprScalar)[1];
+				pexprScalarIdent->AddRef();
+				pexprNewScalar = GPOS_NEW(pmp) CExpression(pmp, pop, pexprRelChild, pexprScalarIdent);
+			}
+
+			pexpr->Pop()->AddRef(); // logical select operator
+			(*pexpr)[0]->AddRef(); // relational child of logical select
+
+			// new logical select expression
+			CExpression *ppexprNew = GPOS_NEW(pmp) CExpression(pmp, pexpr->Pop(), (*pexpr)[0], pexprNewScalar);
+			pxfres->Add(ppexprNew);
+		}
+	}
 }
 
 // EOF

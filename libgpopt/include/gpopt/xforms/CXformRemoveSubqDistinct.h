@@ -18,16 +18,10 @@ namespace gpopt
 {
 	using namespace gpos;
 
-	class CXformRemoveSubqDistinct : public CXformSimplifySubquery
+	class CXformRemoveSubqDistinct : public CXformExploration
 	{
 
 		private:
-
-			static BOOL
-			FTransformQuantified(IMemoryPool *pmp, CExpression *pexprScalar, CExpression **ppexprNewScalar);
-
-			static BOOL
-			FTransformExistential(IMemoryPool *pmp, CExpression *pexprScalar, CExpression **ppexprNewScalar);
 
 			// private copy ctor
 			CXformRemoveSubqDistinct(const CXformRemoveSubqDistinct &);
@@ -61,8 +55,9 @@ namespace gpopt
 			virtual
 			EXformPromise Exfp (CExpressionHandle &exprhdl) const;
 
+			// actual transform
 			virtual
-			void ssmaping(const SSimplifySubqueryMapping **mapping, ULONG &size) const;
+			void Transform(CXformContext *pxfctxt, CXformResult *pxfres, CExpression *pexpr) const;
 
 	}; // class CXformRemoveSubqDistinct
 

@@ -100,6 +100,7 @@ CLogicalSelect::PxfsCandidates
 	CXformSet *pxfs = GPOS_NEW(pmp) CXformSet(pmp);
 
 	(void) pxfs->FExchangeSet(CXform::ExfSelect2Apply);
+	(void) pxfs->FExchangeSet(CXform::ExfRemoveSubqDistinct);
 	(void) pxfs->FExchangeSet(CXform::ExfInlineCTEConsumerUnderSelect);
 	(void) pxfs->FExchangeSet(CXform::ExfPushGbWithHavingBelowJoin);
 	(void) pxfs->FExchangeSet(CXform::ExfSelect2IndexGet);
@@ -109,7 +110,6 @@ CLogicalSelect::PxfsCandidates
 	(void) pxfs->FExchangeSet(CXform::ExfSelect2DynamicBitmapBoolOp);
 	(void) pxfs->FExchangeSet(CXform::ExfSimplifySelectWithSubquery);
 	(void) pxfs->FExchangeSet(CXform::ExfSelect2Filter);
-	(void) pxfs->FExchangeSet(CXform::ExfRemoveSubqDistinct);
 
 	return pxfs;
 }
