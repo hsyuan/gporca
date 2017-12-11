@@ -68,7 +68,7 @@ CXformRemoveSubqDistinct::Exfp
 //    |  +--CScalarProjectList
 //    +--CScalarIdent "a" (0)
 //
-// will become
+// will produce
 //
 // CLogicalSelect
 // |--CLogicalGet "foo"
@@ -84,7 +84,7 @@ CXformRemoveSubqDistinct::Exfp
 //       |--CLogicalGet "bar"
 //       +--CScalarProjectList
 //
-// will become
+// will produce
 //
 // CLogicalSelect
 // |--CLogicalGet "foo"
