@@ -2,14 +2,14 @@
 <!--
 create table R1(a varchar) WITH (appendonly=true) distributed by (a);
 create table S1(b varchar) WITH (appendonly=true) distributed by (b);
-create index idx1 on R(a);
-create index idx2 on S(b);
+create index idx1 on R1(a);
+create index idx2 on S1(b);
 create table R2(a varchar, primary key(a));
 create table S2(b varchar, primary key(b));
 insert into R1 select i from generate_series(0,10) i;
-analyze;
+analyze R1;
 
-explain select * from R1 inner join S1 on a = b union all select * from R2 inner join S2 on a = b;;
+explain select * from R1 inner join S1 on a = b union all select * from R2 inner join S2 on a = b;
                                        QUERY PLAN
  Gather Motion 3:1  (slice1; segments: 3)  (cost=0.00..1299.00 rows=1 width=16)
    ->  Append  (cost=0.00..1299.00 rows=1 width=16)
