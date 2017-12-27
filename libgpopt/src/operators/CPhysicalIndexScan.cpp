@@ -14,6 +14,7 @@
 
 #include "gpopt/base/CDistributionSpecHashed.h"
 #include "gpopt/base/CUtils.h"
+#include "gpopt/base/CCastUtils.h"
 #include "gpopt/base/COptCtxt.h"
 #include "gpopt/operators/CExpressionHandle.h"
 #include "gpopt/operators/CPhysicalIndexScan.h"
@@ -183,13 +184,14 @@ CPhysicalIndexScan::PexprMatchEqualitySide
 			continue;
 		}
 
-		if (CUtils::FEqual(pexprPredOuter, pexprToMatch))
+		pexprToMatch = CCastUtils::PexprWithoutBinaryCoercibleCasts(pexprToMatch);
+		if (CUtils::FEqual(CCastUtils::PexprWithoutBinaryCoercibleCasts(pexprPredOuter), pexprToMatch))
 		{
 			pexprMatching = pexprPredInner;
 			break;
 		}
 
-		if (CUtils::FEqual(pexprPredInner, pexprToMatch))
+		if (CUtils::FEqual(CCastUtils::PexprWithoutBinaryCoercibleCasts(pexprPredInner), pexprToMatch))
 		{
 			pexprMatching = pexprPredOuter;
 			break;
