@@ -361,6 +361,31 @@ CPhysicalJoin::PdsDerive
 		pdsInner->AddRef();
 		return pdsInner;
 	}
+	else if (CDistributionSpec::EdtHashed == pdsOuter->Edt() &&
+			CDistributionSpec::EdtHashed == pdsInner->Edt() &&
+			(CUtils::FPhysicalInnerJoin(exprhdl.Pop()) ||
+					CUtils::FPhysicalOuterJoin(exprhdl.Pop())))
+	{
+		// If both inner and outer children are hash distributed or
+		// redistributed by the join key, and the join is a inner join
+		// or outer join, set the inner's distribution spec as outer's
+		// equiv hashed distribution spec, and return outer's
+		// distribution spec. This is pretty useful for such case
+		// 'R left join S on R.a = S.a left join T on T.a = S.a'
+		// (R, S, T are distributed by a). Without equiv hashed spec,
+		// Orca will assume (R left join S) is hash distributed by R.a,
+		// ignores the facts that it is also distributed by S.a, and
+		// request a redistribute motion on S.a, which is redundant.
+		// With the equiv hashed spec set for outer distribution, Orca
+		// will know that the equivclass has the same distribution
+		// spec.
+		CDistributionSpecHashed *pdsOuterHashed = CDistributionSpecHashed::PdsConvert(pdsOuter);
+		CDistributionSpecHashed *pdsInnerHashed = CDistributionSpecHashed::PdsConvert(pdsInner);
+		if (!pdsOuterHashed->FMatch(pdsInnerHashed))
+		{
+			pdsOuterHashed->SetHashedEquiv(pdsInnerHashed);
+		}
+	}
 
 	// otherwise, return outer distribution
 	pdsOuter->AddRef();
