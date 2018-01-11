@@ -368,8 +368,8 @@ CPhysicalJoin::PdsDerive
 	{
 		// If both inner and outer children are hash distributed or
 		// redistributed by the join key, and the join is a inner join
-		// or outer join, set the inner's distribution spec as outer's
-		// equiv hashed distribution spec, and return outer's
+		// or outer join, set the outer's distribution spec as inner's
+		// equiv hashed distribution spec, and return inner's
 		// distribution spec. This is pretty useful for such case
 		// 'R left join S on R.a = S.a left join T on T.a = S.a'
 		// (R, S, T are distributed by a). Without equiv hashed spec,
@@ -381,10 +381,12 @@ CPhysicalJoin::PdsDerive
 		// spec.
 		CDistributionSpecHashed *pdsOuterHashed = CDistributionSpecHashed::PdsConvert(pdsOuter);
 		CDistributionSpecHashed *pdsInnerHashed = CDistributionSpecHashed::PdsConvert(pdsInner);
-		if (!pdsOuterHashed->FMatch(pdsInnerHashed))
+		if (!pdsInnerHashed->FMatch(pdsOuterHashed))
 		{
-			pdsOuterHashed->SetHashedEquiv(pdsInnerHashed);
+			pdsInnerHashed->SetHashedEquiv(pdsOuterHashed);
 		}
+		pdsInner->AddRef();
+		return pdsInner;
 	}
 
 	// otherwise, return outer distribution
