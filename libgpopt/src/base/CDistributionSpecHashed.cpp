@@ -380,6 +380,29 @@ CDistributionSpecHashed::PcrsUsed
 }
 
 
+// Set equivalent hashed distribution, caller should make sure that
+// current hashed distribution doesn't match pdshashedEquiv before
+// setting it to equivalent hashed distribution.
+void
+CDistributionSpecHashed::SetHashedEquiv
+	(
+	CDistributionSpecHashed *pdshashedEquiv
+	)
+{
+	GPOS_ASSERT(pdshashedEquiv != NULL);
+
+	if (m_pdshashedEquiv == NULL)
+	{
+		pdshashedEquiv->AddRef();
+		m_pdshashedEquiv = pdshashedEquiv;
+	}
+	else
+	{
+		m_pdshashedEquiv->SetHashedEquiv(pdshashedEquiv);
+	}
+}
+
+
 //---------------------------------------------------------------------------
 //	@function:
 //		CDistributionSpecHashed::FMatchHashedDistribution
