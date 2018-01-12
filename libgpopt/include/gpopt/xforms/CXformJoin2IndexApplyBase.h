@@ -23,6 +23,52 @@ namespace gpopt
 			// private copy ctor
 			CXformJoin2IndexApplyBase(const CXformJoin2IndexApplyBase &);
 			
+			// Can transform left outer join to left outer index apply?
+			// For hash distributed table, we can do outer index apply only
+			// when the inner columns used in the join condition contains
+			// the inner distribution key set. Master only table is ok to
+			// transform to outer index apply, but random table is not.
+			BOOL
+			FCanLeftOuterIndexApply
+				(
+				IMemoryPool *pmp,
+				CExpression *pexprInner,
+				CExpression *pexprScalar
+				) const
+			{
+				TGet *popGet = TGet::PopConvert(pexprInner->Pop());
+				IMDRelation::Ereldistrpolicy ereldist = popGet->Ptabdesc()->Ereldistribution();
+
+				if (ereldist == IMDRelation::EreldistrRandom)
+					return false;
+				else if (ereldist == IMDRelation::EreldistrMasterOnly)
+					return true;
+
+				// now consider hash distributed table
+				CColRefSet *pcrsInnerOutput = CDrvdPropRelational::Pdprel(pexprInner->PdpDerive())->PcrsOutput();
+				CColRefSet *pcrsScalarExpr = CDrvdPropScalar::Pdpscalar(pexprScalar->PdpDerive())->PcrsUsed();
+				CColRefSet *pcrsInnerRefs = GPOS_NEW(pmp) CColRefSet(pmp, *pcrsScalarExpr);
+				pcrsInnerRefs->Intersection(pcrsInnerOutput);
+
+				// Distribution key set of inner GET must be subset of inner columns used in
+				// the left outer join condition, but doesn't need to be equal. Given
+				// R (a, b, c) distributed by (a)
+				// S (a, b, c) distributed by (a), with index1 on S(a), index2 on S(b)
+				// R LOJ S on R.a=S.a and R.c=S.c, we are good to do outer index NL join.
+				// R LOJ S on R.a=S.a and R.b=S.b, we need to take care that in non-distributed
+				// scenario, it is fine to choose either condition as the index condition,
+				// and the other one as the index join filter. But in distributed scenario,
+				// we have to choose R.a=S.a as the index condition, R.b=S.b as the index
+				// filter, because S is hash distributed by a, indicating S.b is randomly
+				// distributed in every segment, nothing we can do on table R to match
+				// the distribution spec of S if we want to utilize index on S(b). This
+				// should be taken care of right before adding the outer index apply
+				// alternative by guarding check.
+				BOOL FCanOuterIndexApply = pcrsInnerRefs->FSubset(popGet->PcrsDist());
+				pcrsInnerRefs->Release();
+				return FCanOuterIndexApply;
+			}
+
 		protected:
 
 			virtual
@@ -30,7 +76,6 @@ namespace gpopt
 			{
 				return GPOS_NEW(pmp) TJoin(pmp);
 			}
-
 
 			virtual
 			CLogicalApply *PopLogicalApply
@@ -103,6 +148,15 @@ namespace gpopt
 				else
 				{
 					pexprScalar->AddRef();
+				}
+
+				if (pexpr->Pop()->Eopid() == COperator::EopLogicalLeftOuterJoin &&
+						!FCanLeftOuterIndexApply(pmp, pexprGet, pexprScalar))
+				{
+					// It is a left outer join, but we can't do outer index apply,
+					// stop transforming and return immediately.
+					CRefCount::SafeRelease(pexprAllPredicates);
+					return;
 				}
 
 				CLogicalDynamicGet *popDynamicGet = NULL;
