@@ -79,7 +79,6 @@
 #include "unittest/gpopt/minidump/CICGTest.h"
 #include "unittest/gpopt/minidump/CTpcdsTest.h"
 #include "unittest/gpopt/minidump/CMultilevelPartitionTest.h"
-#include "unittest/gpopt/minidump/CSetopTest.h"
 #include "unittest/gpopt/minidump/CTVFTest.h"
 #include "unittest/gpopt/minidump/CDMLTest.h"
 #include "unittest/gpopt/minidump/CAggTest.h"
@@ -88,7 +87,6 @@
 #include "unittest/gpopt/minidump/CPhysicalParallelUnionAllTest.h"
 #include "unittest/gpopt/minidump/CPruneColumnsTest.h"
 #include "unittest/gpopt/minidump/CMissingStatsTest.h"
-#include "unittest/gpopt/minidump/CPartTblTest.h"
 #include "unittest/gpopt/minidump/CBitmapTest.h"
 #include "unittest/gpopt/minidump/CCTETest.h"
 #include "unittest/gpopt/minidump/CExternalTableTest.h"
@@ -97,7 +95,6 @@
 #include "unittest/gpopt/minidump/CCastTest.h"
 #include "unittest/gpopt/minidump/CConstTblGetTest.h"
 #include "unittest/gpopt/minidump/COuterJoinTest.h"
-#include "unittest/gpopt/minidump/CScalarArrayCmpTest.h"
 
 #include "unittest/gpopt/operators/CContradictionTest.h"
 #include "unittest/gpopt/operators/CExpressionPreprocessorTest.h"
@@ -150,7 +147,6 @@ static gpos::CUnittest rgut[] =
 	GPOS_UNITTEST_STD(CWindowTest),
 	GPOS_UNITTEST_STD(CICGTest),
 	GPOS_UNITTEST_STD(CMultilevelPartitionTest),
-	GPOS_UNITTEST_STD(CSetopTest),
 	GPOS_UNITTEST_STD(CDMLTest),
 	GPOS_UNITTEST_STD(CDirectDispatchTest),
 	GPOS_UNITTEST_STD(CTVFTest),
@@ -160,7 +156,6 @@ static gpos::CUnittest rgut[] =
 	GPOS_UNITTEST_STD(CPruneColumnsTest),
 	GPOS_UNITTEST_STD(CPhysicalParallelUnionAllTest),
 	GPOS_UNITTEST_STD(CMissingStatsTest),
-	GPOS_UNITTEST_STD(CPartTblTest),
 	GPOS_UNITTEST_STD(CBitmapTest),
 	GPOS_UNITTEST_STD(CCTETest),
 	GPOS_UNITTEST_STD(CExternalTableTest),
@@ -191,7 +186,6 @@ static gpos::CUnittest rgut[] =
 	GPOS_UNITTEST_STD(CCastTest),
 	GPOS_UNITTEST_STD(CConstTblGetTest),
 	GPOS_UNITTEST_STD(COuterJoinTest),
-	GPOS_UNITTEST_STD(CScalarArrayCmpTest),
 
 #if !defined(GPOS_32BIT)
 	GPOS_UNITTEST_STD(CSubqueryHandlerTest),
