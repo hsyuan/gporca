@@ -65,14 +65,10 @@ namespace gpopt
 				return m_pdrgpcrOuterRefs;
 			}
 
-			// return true if we can pull projections up past this operator from its given child
-			virtual
-			BOOL FCanPullProjectionsUp
-			(
-			 ULONG ulChildIndex
-			 ) const
+			// outer column references accessor
+			BOOL FouterJoin() const
 			{
-				return (0 == ulChildIndex);
+				return m_fOuterJoin;
 			}
 
 			//-------------------------------------------------------------------------------------

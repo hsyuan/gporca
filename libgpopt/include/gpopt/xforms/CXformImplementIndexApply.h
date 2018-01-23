@@ -14,7 +14,6 @@ namespace gpopt
 {
 	using namespace gpos;
 
-	template<class TLogicalIndexApply, class TPhysicalIndexNLJoin>
 	class CXformImplementIndexApply : public CXformImplementation
 	{
 
@@ -35,7 +34,7 @@ namespace gpopt
 				GPOS_NEW(pmp) CExpression
 								(
 								pmp,
-								GPOS_NEW(pmp) TLogicalIndexApply(pmp),
+								GPOS_NEW(pmp) CLogicalIndexApply(pmp),
 								GPOS_NEW(pmp) CExpression(pmp, GPOS_NEW(pmp) CPatternLeaf(pmp)), // outer child
 								GPOS_NEW(pmp) CExpression(pmp, GPOS_NEW(pmp) CPatternLeaf(pmp)),  // inner child
 								GPOS_NEW(pmp) CExpression(pmp, GPOS_NEW(pmp) CPatternLeaf(pmp))  // predicate
@@ -50,10 +49,16 @@ namespace gpopt
 
 			// ident accessors
 			virtual
-			EXformId Exfid() const = 0;
+			EXformId Exfid() const
+			{
+				return ExfImplementIndexApply;
+			}
 
 			virtual
-			const CHAR *SzId() const = 0;
+			const CHAR *SzId() const
+			{
+				return "CXformImplementIndexApply";
+			}
 
 			// compute xform promise for a given expression handle
 			virtual
@@ -80,7 +85,7 @@ namespace gpopt
 				CExpression *pexprOuter = (*pexpr)[0];
 				CExpression *pexprInner = (*pexpr)[1];
 				CExpression *pexprScalar = (*pexpr)[2];
-				DrgPcr *pdrgpcr = TLogicalIndexApply::PopConvert(pexpr->Pop())->PdrgPcrOuterRefs();
+				DrgPcr *pdrgpcr = CLogicalIndexApply::PopConvert(pexpr->Pop())->PdrgPcrOuterRefs();
 				pdrgpcr->AddRef();
 
 				// addref all components
@@ -89,11 +94,18 @@ namespace gpopt
 				pexprScalar->AddRef();
 
 				// assemble physical operator
+				CPhysicalNLJoin *pop = NULL;
+
+				if (CLogicalIndexApply::PopConvert(pexpr->Pop())->FouterJoin())
+					pop = GPOS_NEW(pmp) CPhysicalLeftOuterIndexNLJoin(pmp, pdrgpcr);
+				else
+					pop = GPOS_NEW(pmp) CPhysicalInnerIndexNLJoin(pmp, pdrgpcr);
+
 				CExpression *pexprResult =
-					GPOS_NEW(pmp) CExpression
+						GPOS_NEW(pmp) CExpression
 								(
 								pmp,
-								GPOS_NEW(pmp) TPhysicalIndexNLJoin(pmp, pdrgpcr),
+								pop,
 								pexprOuter,
 								pexprInner,
 								pexprScalar
