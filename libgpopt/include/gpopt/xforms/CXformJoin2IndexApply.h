@@ -174,7 +174,7 @@ namespace gpopt
 
 		protected:
 
-			// is the logical join being transformed an outer join?
+			// is the logical join that is being transformed an outer join?
 			BOOL m_fOuterJoin;
 
 			// helper to add IndexApply expression to given xform results container
@@ -237,7 +237,7 @@ namespace gpopt
 				:
 				CXformExploration(pexprPattern)
 			{
-				m_fOuterJoin = pexprPattern->Pop()->Eopid() == COperator::EopLogicalLeftOuterJoin;
+				m_fOuterJoin = (COperator::EopLogicalLeftOuterJoin == pexprPattern->Pop()->Eopid());
 			}
 
 			// dtor

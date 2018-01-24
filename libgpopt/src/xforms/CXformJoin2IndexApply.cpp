@@ -216,7 +216,7 @@ CXformJoin2IndexApply::CreateHomogeneousBtreeIndexApplyAlternatives
 		IMDId *pmdidIndex = pmdrel->PmdidIndex(ul);
 		const IMDIndex *pmdindex = pmda->Pmdindex(pmdidIndex);
 
-		// distribution keys and btree index keys must match each other for left out join
+		// distribution keys and btree index keys must match each other for left outer join
 		// Given:
 		//
 		// R (a, b, c) distributed by (a)

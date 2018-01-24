@@ -28,6 +28,8 @@ namespace gpopt
 			// when the inner columns used in the join condition contains
 			// the inner distribution key set. Master only table is ok to
 			// transform to outer index apply, but random table is not.
+			// Because if the inner is random distributed, there is no way
+			// to redistribute outer child to match inner on the join keys.
 			BOOL
 			FCanLeftOuterIndexApply
 				(
