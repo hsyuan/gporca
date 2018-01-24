@@ -340,12 +340,51 @@ CPhysicalFilter::PosDerive
 CDistributionSpec *
 CPhysicalFilter::PdsDerive
 	(
-	IMemoryPool *, // pmp
+	IMemoryPool *pmp,
 	CExpressionHandle &exprhdl
 	)
 	const
 {
-	return PdsDerivePassThruOuter(exprhdl);
+//	return PdsDerivePassThruOuter(exprhdl);
+	CDistributionSpec *pds = exprhdl.Pdpplan(0 /*ulChildIndex*/)->Pds();
+	if (CDistributionSpec::EdtHashed == pds->Edt())
+	{
+		CExpression *pexprIndexPred = exprhdl.PexprScalarChild(1 /*ulChildIndex*/);
+		DrgPexpr *pdrgpexpr = CPredicateUtils::PdrgpexprConjuncts(pmp, pexprIndexPred);
+
+		DrgPexpr *pdrgpexprMatching = GPOS_NEW(pmp) DrgPexpr(pmp);
+		CDistributionSpecHashed *pdshashed = CDistributionSpecHashed::PdsConvert(pds);
+		DrgPexpr *pdrgpexprHashed = pdshashed->Pdrgpexpr();
+		const ULONG ulSize = pdrgpexprHashed->UlLength();
+
+		BOOL fSuccess = true;
+		for (ULONG ul = 0; fSuccess && ul < ulSize; ul++)
+		{
+			CExpression *pexpr = (*pdrgpexprHashed)[ul];
+			CExpression *pexprMatching = PexprMatchEqualitySide(pexpr, pdrgpexpr);
+			fSuccess = (NULL != pexprMatching);
+			if (fSuccess)
+			{
+				pexprMatching->AddRef();
+				pdrgpexprMatching->Append(pexprMatching);
+			}
+		}
+		pdrgpexpr->Release();
+
+		if (fSuccess)
+		{
+			GPOS_ASSERT(pdrgpexprMatching->UlLength() == pdrgpexprHashed->UlLength());
+
+			// create a matching hashed distribution request
+			BOOL fNullsColocated = pdshashed->FNullsColocated();
+			CDistributionSpecHashed *pdshashedEquiv = GPOS_NEW(pmp) CDistributionSpecHashed(pdrgpexprMatching, fNullsColocated);
+			pdshashed->SetHashedEquiv(pdshashedEquiv);
+		}
+
+		pdrgpexprMatching->Release();
+	}
+	pds->AddRef();
+	return pds;
 }
 
 
