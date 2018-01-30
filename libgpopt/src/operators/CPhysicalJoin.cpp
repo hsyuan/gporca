@@ -1199,6 +1199,14 @@ CPhysicalJoin::PppsRequiredCompute
 
 		if(fNLJoin)
 		{
+			if (1 == ulChildIndex && exprhdl.Pdprel(1)->UlJoinDepth() > 1 && !fOuterPartConsumer)
+			{
+				pdrgpul->Release();
+				ppimResult->Release();
+				ppfmResult->Release();
+				return CPhysical::PppsRequiredPushThruNAry(pmp, exprhdl, pppsRequired, ulChildIndex);
+			}
+
 			if (0 == ulChildIndex && fOuterPartConsumer)
 			{
 				// always push through required partition propagation for consumers on the
